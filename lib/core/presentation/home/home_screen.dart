@@ -12,22 +12,33 @@ class HomeScreen extends GetWidget<HomeController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Identidades',
+          'Mardis Identity',
           style: TextStyle(
             color: Colors.white,
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xffFF0000),
+        // backgroundColor: const Color(0xffFF0000),
+        backgroundColor: Colors.black,
       ),
-      body: PageView(
-        onPageChanged: controller.animateToTab,
-        controller: controller.pageController,
-        physics: const BouncingScrollPhysics(),
-        children: const[
-          IdentitiesScreen(),
-          ScannerScreen(),
-        ],
+      body: Obx(
+        () {
+          if (controller.isAuthenticated.value) {
+            return PageView(
+              onPageChanged: controller.animateToTab,
+              controller: controller.pageController,
+              physics: const BouncingScrollPhysics(),
+              children: [
+                IdentitiesScreen(),
+                ScannerScreen(),
+              ],
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.transparent,

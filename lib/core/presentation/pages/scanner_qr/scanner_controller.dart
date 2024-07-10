@@ -5,16 +5,22 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScannerController extends GetxController {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final HomeController homeController = Get.find();
-
-  var qrResult = ''.obs;
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? qrViewController;
+  var qrResult = ''.obs;
+
+  void updateQrResult(String result) {
+    qrResult.value = result;
+    Get.snackbar('Código QR Escaneado', result);
+  }
 
   @override
   void onInit() {
     super.onInit();
-    requestCameraPermission();
+    if (homeController.currentPage.value == 1) {
+      requestCameraPermission();
+    }
   }
 
   Future<void> requestCameraPermission() async {
@@ -28,18 +34,11 @@ class ScannerController extends GetxController {
   }
 
   void onQRViewCreated(QRViewController controller) {
-    qrViewController = controller;
     controller.scannedDataStream.listen((scanData) {
       updateQrResult(scanData.code!);
       homeController.animateToTab(0); // Navegar a la pestaña de identidades
       controller.dispose(); // Detener la cámara
     });
-  }
-
-  void updateQrResult(String result) {
-    // Actualiza el resultado del escaneo QR
-    qrResult.value = result;
-    Get.snackbar('Código QR Escaneado', result);
   }
 
   @override
