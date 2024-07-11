@@ -5,10 +5,7 @@ import 'scanner_controller.dart';
 
 class ScannerScreen extends GetWidget<ScannerController> {
   const ScannerScreen({super.key});
-
-  // final HomeController homeController = Get.find();
-
-  // @override
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
