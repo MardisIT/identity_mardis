@@ -24,7 +24,7 @@ class HomeController extends GetxController {
     );
   }
 
-    Future<void> _authenticate() async {
+  Future<void> _authenticate() async {
     try {
       isAuthenticated.value = await auth.authenticate(
         localizedReason: 'Please authenticate to access this feature',

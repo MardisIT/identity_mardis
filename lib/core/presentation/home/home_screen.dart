@@ -34,7 +34,7 @@ class HomeScreen extends GetWidget<HomeController> {
               ],
             );
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
