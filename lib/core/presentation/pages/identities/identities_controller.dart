@@ -18,9 +18,19 @@ class IdentitiesController extends GetxController {
     List<String> identityStrings = prefs.getStringList('identities') ?? [];
     identities.value = identityStrings.map((id) => Identity(id: id)).toList();
     for (var identity in identities) {
-      startProgressAnimation(identity);
+      if (identity.progressValue.value < 1.0) {
+        startProgressAnimation(identity);
+      }
     }
   }
+
+  // Future<void> addIdentity(String identity) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   List<String> identities = prefs.getStringList('identities') ?? [];
+  //   identities.add(identity);
+  //   await prefs.setStringList('identities', identities);
+  //   loadIdentities(); // Recargar identidades
+  // }
 
   Future<void> addIdentity(String id) async {
     Identity newIdentity = Identity(id: id);
