@@ -14,10 +14,15 @@ class ScannerController extends GetxController {
 
   void updateQrResult(String result) async {
     qrResult.value = result;
-    await identitiesController.addIdentity(result); // Añadir identidad escaneada y guardarla
-    Get.snackbar('Código QR Escaneado', result);
+    await identitiesController
+        .addIdentity(result); // Añadir identidad escaneada y guardarla
+    Get.snackbar(
+      'OK!',
+      'Código QR Escaneado',
+      backgroundColor: Colors.green.withOpacity(0.5),
+      colorText: Colors.white,
+    );
   }
-
 
   @override
   void onInit() {
@@ -33,7 +38,6 @@ class ScannerController extends GetxController {
       Get.snackbar(
         'Permiso requerido',
         'La cámara es necesaria para escanear códigos QR',
-        backgroundColor: Colors.green
       );
     }
   }

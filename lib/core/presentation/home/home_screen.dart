@@ -17,9 +17,6 @@ class HomeScreen extends GetWidget<HomeController> {
             color: Colors.white,
           ),
         ),
-        centerTitle: true,
-        // backgroundColor: const Color(0xffFF0000),
-        backgroundColor: Colors.black,
       ),
       body: Obx(
         () {

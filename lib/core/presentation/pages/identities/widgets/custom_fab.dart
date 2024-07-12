@@ -40,7 +40,7 @@ class CustomFAB extends StatelessWidget {
           foregroundColor: Colors.white,
           shape: const CircleBorder(),
           onTap: () {
-            print('Eliminar');
+            controller.toggleDeleteMode();
           },
         ),
       ],
