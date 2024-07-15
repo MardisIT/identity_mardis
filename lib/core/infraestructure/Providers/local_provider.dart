@@ -32,9 +32,9 @@ class LocalProvider extends ILocalProvider {
     return token;
   }
 
-  @override
-  Future<UserViewModel> saveUser(UserViewModel user) async {
-    await secureStorage.write(key: csPrefToken, value: user.toRawJson());
-    return user;
-  }
+  // @override
+  // Future<UserViewModel> saveUser(UserViewModel user) async {
+  //   await secureStorage.write(key: csPrefToken, value: user.toRawJson());
+  //   return user;
+  // }
 }

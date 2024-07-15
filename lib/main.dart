@@ -6,7 +6,6 @@ import 'package:identity_engine/core/presentation/initialMain/initial_main_bindi
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,

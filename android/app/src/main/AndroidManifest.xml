@@ -1,13 +1,16 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.mardis.identitymardis">
     <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- <uses-permission android:name="android.permission.USE_FINGERPRINT" /> -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:label="Identity Mardis"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/icon_mardis">
         <activity
             android:name=".MainActivity"
             android:exported="true"

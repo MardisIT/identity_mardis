@@ -153,6 +153,30 @@ class RequestApiKey {
       },
     );
   }
+//* ----------------------------------------------------------------------------- */
+
+    Future<GetRequest> postTenant(Uri url, String tenant, {dynamic body} ) async {
+    return http
+        .post(
+      url,
+      headers: {
+        "Chariot-APIKey": AuthorizationKey.chariotApiKey,
+        'Content-Type': 'application/json',
+        'Tenant': tenant
+      },
+      body: jsonEncode(body),
+    )
+        .then(
+      (http.Response response) {
+        final int statusCode = response.statusCode;
+
+        return GetRequest(
+            url.path, response.body, statusCode, RequestType.post);
+      },
+    );
+  }
+
+  //* ----------------------------------------------------------------------------- */
 
   Future<GetRequest> get(Uri url) async {
     return http.get(

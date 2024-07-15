@@ -1,4 +1,4 @@
-package com.example.identity_engine
+package com.mardis.identitymardis
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

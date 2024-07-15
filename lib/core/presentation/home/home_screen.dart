@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
+import 'package:identity_engine/core/presentation/pages/configuration/configuration_screen.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_screen.dart';
 import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_screen.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -24,10 +25,12 @@ class HomeScreen extends GetWidget<HomeController> {
             return PageView(
               onPageChanged: controller.animateToTab,
               controller: controller.pageController,
+              
               physics: const BouncingScrollPhysics(),
               children: [
                 IdentitiesScreen(),
                 ScannerScreen(),
+                ConfigurationScreen(),
               ],
             );
           } else {
@@ -59,7 +62,7 @@ class HomeScreen extends GetWidget<HomeController> {
               // _bottomAppBarItem(
               //   context,
               //   icon: Icons.settings_rounded,
-              //   page: 0,
+              //   page: 2,
               //   label: 'Configuración',
               // ),
             ],

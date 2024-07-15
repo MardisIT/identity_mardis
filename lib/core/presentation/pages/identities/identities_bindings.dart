@@ -4,6 +4,8 @@ import 'package:identity_engine/core/presentation/pages/identities/identities_co
 class IdentitiesBindings extends Bindings {
   @override
   void dependencies() => Get.lazyPut(
-        () => IdentitiesController(),
+        () => IdentitiesController(
+          loginProverInterface: Get.find(),
+        ),
       );
 }

@@ -4,6 +4,8 @@ import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_contr
 class ScannerBindings extends Bindings {
   @override
   void dependencies() => Get.lazyPut(
-        () => ScannerController(),
+        () => ScannerController(
+          loginProverInterface: Get.find(),
+        ),
       );
 }

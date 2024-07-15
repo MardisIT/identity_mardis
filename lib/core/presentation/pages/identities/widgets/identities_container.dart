@@ -20,6 +20,13 @@ class IdentitiesContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Separar el resultado del QR
+    List<String> parts = scannerController.qrResult.value.split('&');
+
+    // String email = parts.length > 1 ? parts[1] : '';
+    String systemAplication = parts.length > 2 ? parts[2] : '';
+    String tenant = parts.length > 3 ? parts[3] : '';
+
     return Column(
       children: [
         const SizedBox(height: 5),
@@ -57,21 +64,26 @@ class IdentitiesContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Engine',
+                      Text(
+                        '${identity.systemAplication} - ${identity.email}',
                         style: TextStyle(
                           fontSize: 17,
                           color: Colors.black,
                         ),
                       ),
-                      Text(
-                        identity.id,
-                        style: const TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                      ),
+                      Obx(
+                        () {
+                          return Text(
+                            // identity.id,
+                            identity.code.value,
+                            style: const TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),

@@ -5,6 +5,6 @@ abstract class ILocalProvider {
   Future<User> getUser();
   Future<String?> getToken();
   Future<void> clearAllData();
-  Future<UserViewModel> saveUser(UserViewModel user);
+  // Future<UserViewModel> saveUser(UserViewModel user);
   Future<String?> saveToken({required String token});
 }
