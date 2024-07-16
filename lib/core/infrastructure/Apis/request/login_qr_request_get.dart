@@ -1,8 +1,8 @@
 import 'package:identity_engine/core/domain/Models/login/login_response.dart';
-import 'package:identity_engine/core/infraestructure/Apis/Helpers/cliente_api.dart';
+import 'package:identity_engine/core/infrastructure/Apis/Helpers/cliente_api.dart';
 import 'dart:convert';
 
-import 'package:identity_engine/core/infraestructure/Apis/Helpers/request.dart';
+import 'package:identity_engine/core/infrastructure/Apis/Helpers/request.dart';
 
 class LoginRequestGet {
   final RequestApiKey _callApi = RequestApiKey();
@@ -11,7 +11,7 @@ class LoginRequestGet {
     var url = HTTP.getAddress(Service.QrRegenerate);
 
     try {
-      Uri combinedUrl = Uri.parse(url);
+      Uri combinedUrl = Uri.parse(url + idUser);
       GetRequest service = await _callApi.getTennat(combinedUrl, tenant);
       if (service.complete && service.response.isNotEmpty) {
         var jsonResponse = json.decode(service.response);

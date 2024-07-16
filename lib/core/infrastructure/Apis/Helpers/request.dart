@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:identity_engine/core/Routes/router.dart';
-import 'package:identity_engine/core/infraestructure/Apis/Utils/auth.dart';
+import 'package:identity_engine/core/infrastructure/Apis/Utils/auth.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:identity_engine/core/infraestructure/Apis/Utils/http_errors.dart';
-import 'package:identity_engine/core/infraestructure/Providers/local_provider.dart';
+import 'package:identity_engine/core/infrastructure/Apis/Utils/http_errors.dart';
+import 'package:identity_engine/core/infrastructure/Providers/local_provider.dart';
 
 enum RequestType { post, put, get, delete }
 

@@ -9,7 +9,7 @@ enum Service {
 class HTTP {
   static const String Login = "/Supervisor/LoginSupervisor";
   static const String QrLogin = "/login/ScanLoginQR";
-  static const String QrRegenerate = "/login/UpdateSecurityCode?IdUser=C34FDD0F-8E18-4167-B869-F73C463188E7";
+  static const String QrRegenerate = "/login/UpdateSecurityCode?IdUser=";
 
 
   static String getSufix(Service service) {

@@ -1,8 +1,8 @@
 import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.dart';
 import 'package:identity_engine/core/domain/Models/login/login_request.dart';
 import 'package:identity_engine/core/domain/Models/login/login_response.dart';
-import 'package:identity_engine/core/infraestructure/Apis/request/login_qr_request_get.dart';
-import 'package:identity_engine/core/infraestructure/Apis/request/login_qr_request_post.dart';
+import 'package:identity_engine/core/infrastructure/Apis/request/login_qr_request_get.dart';
+import 'package:identity_engine/core/infrastructure/Apis/request/login_qr_request_post.dart';
 
 class LoginProvider extends ILoginProvider {
   final LoginRequestPost _loginRequest = LoginRequestPost();
