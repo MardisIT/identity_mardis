@@ -1,4 +1,3 @@
-import 'package:identity_engine/core/domain/Models/login/login_request.dart';
 import 'package:identity_engine/core/domain/Models/login/login_response.dart';
 import 'package:identity_engine/core/infraestructure/Apis/Helpers/cliente_api.dart';
 import 'dart:convert';

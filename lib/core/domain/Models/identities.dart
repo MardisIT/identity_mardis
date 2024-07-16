@@ -7,8 +7,8 @@ class Identity {
   RxBool isChecked;
   RxDouble progressValue;
   int time;
-  RxString code;
-
+  RxString? code;
+  String? codestaitc;
   String systemAplication;
   String email;
 
@@ -17,29 +17,35 @@ class Identity {
   Identity({
     required this.id,
     required this.time,
-    required this.code,
+  
     required this.systemAplication,
     required this.email,
     required this.jsonPreference,
+    this.codestaitc,
     bool isChecked = false,
     double progressValue = 0.0,
+    String code = '',
     // required timeExpiration,
   })  : isChecked = isChecked.obs,
-        progressValue = progressValue.obs;
+        progressValue = progressValue.obs,
+        code=code.obs;
 
   factory Identity.fromJson(Map<String, dynamic> json) => Identity(
         id: json["id"],
         time: json["time"],
-        code: (json["code"].toString()).obs,
+        code: (json["code"].toString()),
+        // code: json["code"].toString(),
         systemAplication: json["systemAplication"],
-        email: json["email"], 
+        email: json["email"],
         jsonPreference: json["jsonPreference"] ?? '',
+        codestaitc: json["codestaitc"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "time": time,
-        "code": code,
+        // "code": code,
+        "codestaitc": codestaitc,
         "systemAplication": systemAplication,
         "email": email,
       };

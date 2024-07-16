@@ -24,6 +24,7 @@ class ScannerController extends GetxController {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? qrViewController;
   var qrResult = ''.obs;
+  var tenant = '';
 
   void updateQrResult(String result) async {
     qrResult.value = result;
@@ -45,7 +46,7 @@ class ScannerController extends GetxController {
 
       String idUser = parts.length > 0 ? parts[0] : '';
       String systemAplication = parts.length > 2 ? parts[2] : '';
-      String tenant = parts.length > 3 ? parts[3] : '';
+      tenant = parts.length > 3 ? parts[3] : '';
       String email = parts.length > 1 ? parts[1] : '';
 
       //* ----------------------------------------------------------------
@@ -56,11 +57,11 @@ class ScannerController extends GetxController {
 
       if (responseDecodeScanLogin.status == 'success') {
         await identitiesController.addIdentity(
-          responseDecodeScanLogin.data!.idUser.obs,
+          responseDecodeScanLogin.data!.idUser,
           responseDecodeScanLogin.data!.timeExpiration,
-          responseDecodeScanLogin.data!.loginCode.obs,
-          systemAplication.obs,
-          email.obs,
+          responseDecodeScanLogin.data!.loginCode,
+          systemAplication,
+          email,
         );
         Get.snackbar(
           'OK!',

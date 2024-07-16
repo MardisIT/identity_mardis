@@ -1,11 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
 import 'package:identity_engine/core/domain/Models/login/login_response.dart';
+import 'package:identity_engine/core/domain/Models/login/user_view_model.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
+import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
+import 'package:identity_engine/core/presentation/widget/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IdentitiesController extends GetxController {
@@ -16,17 +18,34 @@ class IdentitiesController extends GetxController {
   });
 
   final HomeController homeController = Get.find();
+  
 
   var identities = <Identity>[].obs;
 
   var identitiesToDelete = <Identity>[].obs;
   var isDeleteMode = false.obs;
 
+  Rx<Identity> identityData = Identity(
+    id: '',
+    time: 0,
+    codestaitc: '',
+    systemAplication: '',
+    email: '',
+    jsonPreference: '',
+  ).obs;
+
+  Rx<QRCodeData> qrResponse = QRCodeData(
+    idUser: '',
+    loginCode: '',
+    phoneIdentifier: '',
+    codeExpiration: '',
+    timeExpiration: 0,
+  ).obs;
+
   @override
   void onInit() {
     super.onInit();
     loadIdentities();
-    // getUser('c34fdd0f-8e18-4167-b869-f73c463188e7', 'StoreAudit');
   }
 
   Future<void> loadIdentities() async {
@@ -37,6 +56,7 @@ class IdentitiesController extends GetxController {
       final Identity identityModel = Identity.fromJson(jsonDecode(identity));
       identities.add(identityModel);
       if (identityModel.progressValue.value < 1.0) {
+        identityModel.code!.value = identityModel.codestaitc!;
         startProgressAnimation(identityModel);
       }
     }
@@ -44,45 +64,54 @@ class IdentitiesController extends GetxController {
 
 //************************************************************************************************
 
-  Future<void> updateIdentity(RxString id, int time, RxString code,
-      RxString systemAplication, RxString email) async {
-    Identity newIdentity = Identity(
-      id: id.value,
-      time: time,
-      code: code,
-      systemAplication: systemAplication.value,
-      email: email.value,
-      jsonPreference: '',
-    );
+  // Future<void> updateIdentity(String id, int time, String code,
+  //     String systemAplication, String email) async {
+  //   // Identity newIdentity = Identity(
+  //   //   id: id.value,
+  //   //   time: time,
+  //   //   codestaitc: code.value,
+  //   //   systemAplication: systemAplication.value,
+  //   //   email: email.value,
+  //   //   jsonPreference: '',
+  //   // );
 
-    final identityJson = jsonEncode(newIdentity);
-    newIdentity.jsonPreference = identityJson;
-    identities.add(newIdentity);
-    final prefs = await SharedPreferences.getInstance();
+  //   identityData.value = Identity(
+  //     id: id,
+  //     time: time,
+  //     systemAplication: systemAplication,
+  //     email: email,
+  //     jsonPreference: '',
+  //   );
 
-    List<String> identityStrings =
-        identities.map((i) => i.jsonPreference).toList();
+  //   final identityJson = jsonEncode(identityData);
+  //   identityData.value.jsonPreference = identityJson;
+  //   identities.add(identityData.value);
+  //   final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setStringList('identities', identityStrings);
-    startProgressAnimation(newIdentity);
-  }
+  //   List<String> identityStrings =
+  //       identities.map((i) => i.jsonPreference).toList();
+
+  //   await prefs.setStringList('identities', identityStrings);
+  //   startProgressAnimation(identityData.value);
+  // }
 
   //************************************************************************************************
 
-  Future<void> addIdentity(RxString id, int time, RxString code,
-      RxString systemAplication, RxString email) async {
-    Identity newIdentity = Identity(
-      id: id.value,
+  Future<void> addIdentity(String id, int time, String code,
+      String systemAplication, String email) async {
+    identityData.value = Identity(
+      id: id,
       time: time,
-      code: code,
-      systemAplication: systemAplication.value,
-      email: email.value,
+      // code: code,
+      codestaitc: code,
+      systemAplication: systemAplication,
+      email: email,
       jsonPreference: '',
     );
 
-    final identitiTest = jsonEncode(newIdentity);
-    newIdentity.jsonPreference = identitiTest;
-    identities.add(newIdentity);
+    final identitiTest = jsonEncode(identityData);
+    identityData.value.jsonPreference = identitiTest;
+    identities.add(identityData.value);
     final prefs = await SharedPreferences.getInstance();
 
     List<String> identityStrings =
@@ -90,7 +119,8 @@ class IdentitiesController extends GetxController {
 
     // List<String> identityStrings = identities.toJson();
     await prefs.setStringList('identities', identityStrings);
-    startProgressAnimation(newIdentity);
+    identityData.value.code!.value = code;
+    startProgressAnimation(identityData.value);
   }
 
   //* Metodos para eliminacion de identidades
@@ -110,86 +140,7 @@ class IdentitiesController extends GetxController {
 
   void showDeleteConfirmationDialog() {
     Get.dialog(
-      AlertDialog(
-        icon: Container(
-          height: 80,
-          width: 80,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.red, width: 5),
-          ),
-          child: const Icon(
-            Icons.question_mark_outlined,
-            size: 60,
-            color: Colors.red,
-          ),
-        ),
-        title: const Text(
-          'Confirmar eliminación',
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: const Text(
-          '¿Está seguro que desea eliminar las identidades seleccionadas?',
-          textAlign: TextAlign.center,
-        ),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SizedBox(
-                height: 50,
-                width: 120,
-                child: TextButton(
-                  style: ButtonStyle(
-                    side: WidgetStateProperty.all(
-                      const BorderSide(
-                        color: Colors.black,
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                  onPressed: () {
-                    cancelDeleteMode();
-                    Get.back(); // Cerrar el diálogo
-                  },
-                  child: const Text(
-                    'Cancelar',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 50,
-                width: 120,
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                      Colors.red,
-                    ),
-                  ),
-                  onPressed: () {
-                    Get.back(); // Cerrar el diálogo
-                    removeSelectedIdentities();
-                  },
-                  child: const Text(
-                    'Eliminar',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
+      const CustomDialog(),
     );
   }
 
@@ -214,6 +165,7 @@ class IdentitiesController extends GetxController {
   //* Metodos para eliminacion de identidades
 
   void startProgressAnimation(Identity identity) {
+    final ScannerController scannerController = Get.find();
     int durationInSeconds = identity.time;
     int steps = durationInSeconds * 10; // 10 steps per second
     const int stepDuration = 1000 ~/ 10; // 100 milliseconds per step
@@ -228,13 +180,16 @@ class IdentitiesController extends GetxController {
           identity.progressValue.value = 0.0;
           // getUser(identity.id, 'StoreAudit');
           QRCodeResponse loginResponse =
-              await getUser(identity.id, 'StoreAudit');
+              await getUser(identityData.value.id, scannerController.tenant);
 
           if (loginResponse.status == "success") {
-            // identity.code = loginResponse.data!.loginCode;
-            identities.where(
-              (x) => x.id == identity.id,
-            ).first.code.value = loginResponse.data!.loginCode;
+            identities
+                .where(
+                  (x) => x.id == identity.id,
+                )
+                .first
+                .code!
+                .value = loginResponse.data!.loginCode;
           }
           startProgressAnimation(identity);
         }
