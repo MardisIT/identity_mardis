@@ -49,8 +49,7 @@ class HomeController extends GetxController {
   void onInit() async {
     pageController = PageController(initialPage: 0);
     //  var path = Directory.current.path;
-    await Hive.initFlutter();
-    Hive.registerAdapter(UserIdentityAdapter());
+
 
 //   var person = Userindentity(  'Dave', 22, 22,  'Dave',  'Dave',  'Dave');
 // // _service.add(person);

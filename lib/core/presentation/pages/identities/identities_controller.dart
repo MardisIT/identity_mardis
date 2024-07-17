@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class IdentitiesController extends GetxController {
   ILoginProvider loginProverInterface;
-
+    final Useridentityservice _service = Useridentityservice();
   IdentitiesController({
     required this.loginProverInterface,
   });
@@ -50,11 +50,18 @@ class IdentitiesController extends GetxController {
   }
 
   Future<void> loadIdentities() async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> identityStrings = prefs.getStringList('identities') ?? [];
+
+  var identityStrings=await _service.getAll();
     identities.value = [];
     for (var identity in identityStrings) {
-      final Identity identityModel = Identity.fromJson(jsonDecode(identity));
+      final Identity identityModel = Identity(
+        id: identity.id,
+        time: identity.time,
+        codestaitc: identity.code.toString(),
+        systemAplication: identity.systemAplication,
+        email: identity.email,
+        jsonPreference: '',
+      );
       identities.add(identityModel);
       if (identityModel.progressValue.value < 1.0) {
         identityModel.code!.value = identityModel.codestaitc!;
@@ -100,7 +107,7 @@ class IdentitiesController extends GetxController {
 
   Future<void> addIdentity(String id, int time, String code,
       String systemAplication, String email) async {
-    final Useridentityservice _service = Useridentityservice();
+
     identityData.value = Identity(
       id: id,
       time: time,
@@ -120,20 +127,12 @@ class IdentitiesController extends GetxController {
       int.parse(code),
       systemAplication,
       email,
-      'StoreAudit',
+      'StoreAudit',''
     );
     await _service.add(person);
-    var test=await _service.getAll();
+
     
 //************************************************************************************************
-    identities.add(identityData.value);
-    final prefs = await SharedPreferences.getInstance();
-
-    List<String> identityStrings =
-        identities.map((i) => i.jsonPreference).toList();
-
-    // List<String> identityStrings = identities.toJson();
-    await prefs.setStringList('identities', identityStrings);
     identityData.value.code!.value = code;
     startProgressAnimation(identityData.value);
   }

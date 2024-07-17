@@ -14,7 +14,8 @@ class UserIdentityAdapter extends TypeAdapter<Userindentity> {
     final systemAplication = reader.readString();
     final email = reader.readString();
     final tenant = reader.readString();
-    return Userindentity(id, time, code, systemAplication, email, tenant);
+     final addressMac = reader.readString();
+    return Userindentity(id, time, code, systemAplication, email, tenant,addressMac);
   }
 
   @override
@@ -25,5 +26,6 @@ class UserIdentityAdapter extends TypeAdapter<Userindentity> {
     writer.writeString(obj.systemAplication);
     writer.writeString(obj.email);
     writer.writeString(obj.tenant);
+    writer.writeString( obj.addressMac);
   }
 }
