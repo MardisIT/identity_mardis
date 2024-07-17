@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class IdentitiesController extends GetxController {
   ILoginProvider loginProverInterface;
-    final Useridentityservice _service = Useridentityservice();
+  final Useridentityservice _service = Useridentityservice();
   IdentitiesController({
     required this.loginProverInterface,
   });
@@ -27,13 +27,14 @@ class IdentitiesController extends GetxController {
   var isDeleteMode = false.obs;
 
   Rx<Identity> identityData = Identity(
-    id: '',
-    time: 0,
-    codestaitc: '',
-    systemAplication: '',
-    email: '',
-    jsonPreference: '',
-  ).obs;
+          id: '',
+          time: 0,
+          codestaitc: '',
+          systemAplication: '',
+          email: '',
+          jsonPreference: '',
+          tenant: '')
+      .obs;
 
   Rx<QRCodeData> qrResponse = QRCodeData(
     idUser: '',
@@ -50,18 +51,17 @@ class IdentitiesController extends GetxController {
   }
 
   Future<void> loadIdentities() async {
-
-  var identityStrings=await _service.getAll();
+    var identityStrings = await _service.getAll();
     identities.value = [];
     for (var identity in identityStrings) {
       final Identity identityModel = Identity(
-        id: identity.id,
-        time: identity.time,
-        codestaitc: identity.code.toString(),
-        systemAplication: identity.systemAplication,
-        email: identity.email,
-        jsonPreference: '',
-      );
+          id: identity.id,
+          time: identity.time,
+          codestaitc: identity.code.toString(),
+          systemAplication: identity.systemAplication,
+          email: identity.email,
+          jsonPreference: '',
+          tenant: identity.tenant);
       identities.add(identityModel);
       if (identityModel.progressValue.value < 1.0) {
         identityModel.code!.value = identityModel.codestaitc!;
@@ -106,32 +106,22 @@ class IdentitiesController extends GetxController {
   //************************************************************************************************
 
   Future<void> addIdentity(String id, int time, String code,
-      String systemAplication, String email) async {
-
+      String systemAplication, String email, String tenant) async {
     identityData.value = Identity(
-      id: id,
-      time: time,
-      // code: code,
-      codestaitc: code,
-      systemAplication: systemAplication,
-      email: email,
-      jsonPreference: '',
-    );
-
-    final identitiTest = jsonEncode(identityData);
-    identityData.value.jsonPreference = identitiTest;
+        id: id,
+        time: time,
+        // code: code,
+        codestaitc: code,
+        systemAplication: systemAplication,
+        email: email,
+        jsonPreference: '',
+        tenant: tenant);
 //************************************************************************************************
     var person = Userindentity(
-      id,
-      time,
-      int.parse(code),
-      systemAplication,
-      email,
-      'StoreAudit',''
-    );
+        id, time, int.parse(code), systemAplication, email, tenant, '');
     await _service.add(person);
 
-    
+    identities.add(identityData.value);
 //************************************************************************************************
     identityData.value.code!.value = code;
     startProgressAnimation(identityData.value);
@@ -194,7 +184,7 @@ class IdentitiesController extends GetxController {
           identity.progressValue.value = 0.0;
           // getUser(identity.id, 'StoreAudit');
           QRCodeResponse loginResponse =
-              await getUser(identityData.value.id, scannerController.tenant);
+              await getUser(identity.id, identity.tenant);
 
           if (loginResponse.status == "success") {
             identities
@@ -204,8 +194,8 @@ class IdentitiesController extends GetxController {
                 .first
                 .code!
                 .value = loginResponse.data!.loginCode;
+            startProgressAnimation(identity);
           }
-          startProgressAnimation(identity);
         }
       },
     );

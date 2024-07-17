@@ -11,16 +11,16 @@ class Identity {
   String? codestaitc;
   String systemAplication;
   String email;
-
+  String tenant;
   String jsonPreference;
 
   Identity({
     required this.id,
     required this.time,
-  
     required this.systemAplication,
     required this.email,
     required this.jsonPreference,
+    required this.tenant,
     this.codestaitc,
     bool isChecked = false,
     double progressValue = 0.0,
@@ -28,7 +28,7 @@ class Identity {
     // required timeExpiration,
   })  : isChecked = isChecked.obs,
         progressValue = progressValue.obs,
-        code=code.obs;
+        code = code.obs;
 
   factory Identity.fromJson(Map<String, dynamic> json) => Identity(
         id: json["id"],
@@ -39,6 +39,7 @@ class Identity {
         email: json["email"],
         jsonPreference: json["jsonPreference"] ?? '',
         codestaitc: json["codestaitc"],
+        tenant: json["tenant"],
       );
 
   Map<String, dynamic> toJson() => {
