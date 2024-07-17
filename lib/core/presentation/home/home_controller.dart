@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:identity_engine/core/infrastructure/base/userIdentityAdapter.dart';
+import 'package:identity_engine/core/infrastructure/base/userIdentityService.dart';
+import 'package:identity_engine/core/infrastructure/base/userIndentity_ET.dart';
 import 'package:local_auth/local_auth.dart';
 
 class HomeController extends GetxController {
@@ -36,11 +42,21 @@ class HomeController extends GetxController {
     } catch (e) {
       print(e);
     }
-  }
-
+    }
+final Useridentityservice _service = Useridentityservice();
   @override
-  void onInit() {
+  void onInit() async {
     pageController = PageController(initialPage: 0);
+      //  var path = Directory.current.path;
+  await  Hive.initFlutter();
+  Hive.registerAdapter(UserIdentityAdapter());
+
+
+  var person = Userindentity(  'Dave', 22, 22,  'Dave',  'Dave',  'Dave');
+_service.add(person);
+var test=await _service.getAll();
+  print(test); // Dave: 22
+
     _authenticate().then((_) {
       if (!isAuthenticated.value) {
         SystemNavigator.pop();

@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/Routes/router.dart';
 import 'package:identity_engine/core/application/Interfaces/ilocal_provider.dart';
-
+import 'package:hive/hive.dart';
 class MainController extends GetxController {
   final ILocalProvider localProviderInterface;
   MainController({required this.localProviderInterface});
@@ -14,7 +16,9 @@ class MainController extends GetxController {
 
   void requestPermission() async {
     try {
+      
       Get.offNamed(Routes.home);
+
     } catch (e) {
       Get.snackbar(
         "ERROR",
