@@ -17,7 +17,7 @@ class QRCodeResponse {
         status: json["status"],
         messege: json["messege"],
         error: json["error"],
-        data: QRCodeData.fromJson(json["data"]),
+        data:json["data"]==null?null: QRCodeData.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {

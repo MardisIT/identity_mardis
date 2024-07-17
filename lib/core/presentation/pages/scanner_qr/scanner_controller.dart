@@ -9,14 +9,16 @@ import 'package:identity_engine/Utils/Encryption/encryption.dart';
 import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.dart';
 import 'package:identity_engine/core/domain/Models/login/login_request.dart';
 import 'package:identity_engine/core/domain/Models/login/login_response.dart';
+import 'package:identity_engine/core/infrastructure/base/userIdentityService.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+
 class ScannerController extends GetxController {
   ILoginProvider loginProverInterface;
-
+  final Useridentityservice _hiveServiceUserIdentity = Useridentityservice();
   ScannerController({
     required this.loginProverInterface,
   });
@@ -36,9 +38,9 @@ class ScannerController extends GetxController {
       final key = utf8.encode('E1BAD35C-DBA6-4B36-AC82-58E91582');
       final iv = utf8.encode('ABF01234567CDE89');
       final encryptedData = base64Decode(
-        'EFnPNpmZnC44gEzDNi+O9NfJXuddI4fkg0Kydm+08N6g2D5GzymqgTtKn31T9CWRHodhF+SSuLdHrxKYu9ZCuDRHtlD1/OgCyd8DYPG5MtI=');
-    //  final encryptedData = base64Decode(
-       //   'D+KbjJgx/6KW7k87z3RYrtPHwuUpegb95+yJo6hh+0zHWa3bZ9//TeP0xrAslb3Qq4B5omdzRHkm29CRaPIoDA==');
+          'EFnPNpmZnC44gEzDNi+O9NfJXuddI4fkg0Kydm+08N6g2D5GzymqgTtKn31T9CWRHodhF+SSuLdHrxKYu9ZCuDRHtlD1/OgCyd8DYPG5MtI=');
+      //  final encryptedData = base64Decode(
+      //   'D+KbjJgx/6KW7k87z3RYrtPHwuUpegb95+yJo6hh+0zHWa3bZ9//TeP0xrAslb3Qq4B5omdzRHkm29CRaPIoDA==');
       //final encryptedData = base64Decode(result);
 
       final decryptedData = decrypt(Uint8List.fromList(encryptedData),
@@ -53,25 +55,49 @@ class ScannerController extends GetxController {
       tenant = parts.length > 3 ? parts[3] : '';
       String email = parts.length > 1 ? parts[1] : '';
 
+      var userViewModel = await _hiveServiceUserIdentity.getAll();
+
+      var _userRegister = userViewModel
+          .where((element) => element.id.toUpperCase() == idUser.toUpperCase())
+          .any((element) {
+        return true;
+      });
+      if (_userRegister) {
+        Get.snackbar(
+          'Error',
+          'El usuario  ya se encuentra registrado',
+          backgroundColor: Colors.red.withOpacity(0.5),
+          colorText: Colors.white,
+        );
+        return;
+      }
       //* ----------------------------------------------------------------
-    var infophone=await initPlatformState();
+      var infophone = await initPlatformState();
       // Añadir la identidad desencriptada
-      var responseDecodeScanLogin =
-          await loginUser(idUser, infophone['device']+'-'+infophone['model'], tenant);
+      var responseDecodeScanLogin = await loginUser(
+          idUser, infophone['device'] + '-das' + infophone['model'], tenant);
 
       if (responseDecodeScanLogin.status == 'success') {
         await identitiesController.addIdentity(
-          responseDecodeScanLogin.data!.idUser,
-          responseDecodeScanLogin.data!.timeExpiration,
-          responseDecodeScanLogin.data!.loginCode,
-          systemAplication,
-          email,
-          tenant, infophone['device']+'-'+infophone['model']
-        );
+            responseDecodeScanLogin.data!.idUser,
+            responseDecodeScanLogin.data!.timeExpiration,
+            responseDecodeScanLogin.data!.loginCode,
+            systemAplication,
+            email,
+            tenant,
+            infophone['device'] + '-' + infophone['model']);
         Get.snackbar(
           'OK!',
-          'Código QR Escaneado',
+          'El usuario fue registrado en este dispositivo',
           backgroundColor: Colors.green.withOpacity(0.5),
+          colorText: Colors.white,
+        );
+      }
+      if (responseDecodeScanLogin.status == 'No Exists') {
+        Get.snackbar(
+          'Error',
+          'El usuario no está registrado en otro dispositivo. Por favor, contacte con soporte técnico.',
+          backgroundColor: Colors.red.withOpacity(0.5),
           colorText: Colors.white,
         );
       }
@@ -130,27 +156,25 @@ class ScannerController extends GetxController {
     return loginResponse;
   }
 
-     Future<dynamic> initPlatformState() async {
+  Future<dynamic> initPlatformState() async {
     var deviceData = <String, dynamic>{};
-     final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     try {
-     
-        deviceData = switch (defaultTargetPlatform) {
-          TargetPlatform.android =>
-            _readAndroidBuildData(await deviceInfoPlugin.androidInfo),
-          TargetPlatform.iOS =>
-            _readIosDeviceInfo(await deviceInfoPlugin.iosInfo),
-          TargetPlatform.linux =>
-            _readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo),
-          TargetPlatform.windows =>
-            _readWindowsDeviceInfo(await deviceInfoPlugin.windowsInfo),
-          TargetPlatform.macOS =>
-            _readMacOsDeviceInfo(await deviceInfoPlugin.macOsInfo),
-          TargetPlatform.fuchsia => <String, dynamic>{
-              'Error:': 'Fuchsia platform isn\'t supported'
-            },
-        };
-      
+      deviceData = switch (defaultTargetPlatform) {
+        TargetPlatform.android =>
+          _readAndroidBuildData(await deviceInfoPlugin.androidInfo),
+        TargetPlatform.iOS =>
+          _readIosDeviceInfo(await deviceInfoPlugin.iosInfo),
+        TargetPlatform.linux =>
+          _readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo),
+        TargetPlatform.windows =>
+          _readWindowsDeviceInfo(await deviceInfoPlugin.windowsInfo),
+        TargetPlatform.macOS =>
+          _readMacOsDeviceInfo(await deviceInfoPlugin.macOsInfo),
+        TargetPlatform.fuchsia => <String, dynamic>{
+            'Error:': 'Fuchsia platform isn\'t supported'
+          },
+      };
     } on PlatformException {
       deviceData = <String, dynamic>{
         'Error:': 'Failed to get platform version.'
@@ -158,8 +182,6 @@ class ScannerController extends GetxController {
     }
 
     return deviceData;
- 
-  
   }
 
   Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
