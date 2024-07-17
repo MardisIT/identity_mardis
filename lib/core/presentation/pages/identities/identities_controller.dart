@@ -5,6 +5,8 @@ import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.d
 import 'package:identity_engine/core/domain/Models/identities.dart';
 import 'package:identity_engine/core/domain/Models/login/login_response.dart';
 import 'package:identity_engine/core/domain/Models/login/user_view_model.dart';
+import 'package:identity_engine/core/infrastructure/base/userIdentityService.dart';
+import 'package:identity_engine/core/infrastructure/base/userIndentity_ET.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
 import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
 import 'package:identity_engine/core/presentation/widget/widgets.dart';
@@ -18,7 +20,6 @@ class IdentitiesController extends GetxController {
   });
 
   final HomeController homeController = Get.find();
-  
 
   var identities = <Identity>[].obs;
 
@@ -99,6 +100,7 @@ class IdentitiesController extends GetxController {
 
   Future<void> addIdentity(String id, int time, String code,
       String systemAplication, String email) async {
+    final Useridentityservice _service = Useridentityservice();
     identityData.value = Identity(
       id: id,
       time: time,
@@ -111,6 +113,19 @@ class IdentitiesController extends GetxController {
 
     final identitiTest = jsonEncode(identityData);
     identityData.value.jsonPreference = identitiTest;
+//************************************************************************************************
+    var person = Userindentity(
+      id,
+      time,
+      int.parse(code),
+      systemAplication,
+      email,
+      'StoreAudit',
+    );
+    await _service.add(person);
+    var test=await _service.getAll();
+    
+//************************************************************************************************
     identities.add(identityData.value);
     final prefs = await SharedPreferences.getInstance();
 

@@ -42,26 +42,28 @@ class HomeController extends GetxController {
     } catch (e) {
       print(e);
     }
-    }
-final Useridentityservice _service = Useridentityservice();
+  }
+
+  final Useridentityservice _service = Useridentityservice();
   @override
   void onInit() async {
     pageController = PageController(initialPage: 0);
-      //  var path = Directory.current.path;
-  await  Hive.initFlutter();
-  Hive.registerAdapter(UserIdentityAdapter());
+    //  var path = Directory.current.path;
+    await Hive.initFlutter();
+    Hive.registerAdapter(UserIdentityAdapter());
 
+//   var person = Userindentity(  'Dave', 22, 22,  'Dave',  'Dave',  'Dave');
+// // _service.add(person);
+// var test=await _service.getAll();
+//   print(test); // Dave: 22
 
-  var person = Userindentity(  'Dave', 22, 22,  'Dave',  'Dave',  'Dave');
-_service.add(person);
-var test=await _service.getAll();
-  print(test); // Dave: 22
-
-    _authenticate().then((_) {
-      if (!isAuthenticated.value) {
-        SystemNavigator.pop();
-      }
-    });
+    _authenticate().then(
+      (_) {
+        if (!isAuthenticated.value) {
+          SystemNavigator.pop();
+        }
+      },
+    );
     super.onInit();
   }
 
