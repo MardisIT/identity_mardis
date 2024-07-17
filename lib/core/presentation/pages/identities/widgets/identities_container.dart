@@ -130,7 +130,7 @@ class IdentitiesContainer extends StatelessWidget {
               foregroundColor: Colors.black,
             ),
             onPressed: () {
-              showDialog();
+              showDialog(identity);
             },
             child: Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,9 +203,11 @@ class IdentitiesContainer extends StatelessWidget {
     );
   }
   
-  void showDialog() {
+  void showDialog(Identity _identity) {
+    _identity.progressValue.value =  1.0;//         identity.time.toDouble();    
+    controller.startProgressAnimation(_identity);
     Get.dialog(
-      CustomModalIdentity(identity: controller.identities[index],),
+      CustomModalIdentity(identity: _identity,),
     );
   }
 }

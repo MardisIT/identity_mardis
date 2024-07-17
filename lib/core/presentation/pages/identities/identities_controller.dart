@@ -63,10 +63,11 @@ class IdentitiesController extends GetxController {
       identities.add(identityModel);
       if (identityModel.progressValue.value < 1.0) {
         identityModel.code!.value = identityModel.codestaitc!;
-        startProgressAnimation(identityModel);
+        // startProgressAnimation(identityModel);
       }
     }
   }
+
   Future<void> addIdentity(
       String id,
       int time,
@@ -94,7 +95,7 @@ class IdentitiesController extends GetxController {
     identities.add(identityData.value);
 //************************************************************************************************
     identityData.value.code!.value = code;
-    startProgressAnimation(identityData.value);
+    // startProgressAnimation(identityData.value);
   }
 
   //* Metodos para eliminacion de identidades
@@ -139,35 +140,38 @@ class IdentitiesController extends GetxController {
   //* Metodos para eliminacion de identidades
 
   void startProgressAnimation(Identity identity) {
-    int durationInSeconds = identity.time;
-    int steps = durationInSeconds * 10; // 10 steps per second
-    const int stepDuration = 1000 ~/ 10; // 100 milliseconds per step
+    if (identity.progressValue.value >= 0) {
+      int durationInSeconds = identity.time;
+      int steps = durationInSeconds * 10; // 10 steps per second
+      const int stepDuration = 1000 ~/ 10; // 100 milliseconds per step
 
-    Future.delayed(
-      const Duration(milliseconds: stepDuration),
-      () async {
-        if (identity.progressValue.value < 1.0) {
-          identity.progressValue.value += 1 / steps;
-          startProgressAnimation(identity);
-        } else {
-          identity.progressValue.value = 0.0;
-          // getUser(identity.id, 'StoreAudit');
-          QRCodeResponse loginResponse =
-              await getUser(identity.id, identity.tenant);
-
-          if (loginResponse.status == "success") {
-            identities
-                .where(
-                  (x) => x.id == identity.id,
-                )
-                .first
-                .code!
-                .value = loginResponse.data!.loginCode;
+      Future.delayed(
+        const Duration(milliseconds: stepDuration),
+        () async {
+          if (identity.progressValue.value < 1.0) {
+            identity.progressValue.value += 1 / steps;
             startProgressAnimation(identity);
+          } else {
+            identity.progressValue.value = 0.0;
+            // getUser(identity.id, 'StoreAudit');
+
+            QRCodeResponse loginResponse =
+                await getUser(identity.id, identity.tenant);
+
+            if (loginResponse.status == "success") {
+              identities
+                  .where(
+                    (x) => x.id == identity.id,
+                  )
+                  .first
+                  .code!
+                  .value = loginResponse.data!.loginCode;
+              startProgressAnimation(identity);
+            }
           }
-        }
-      },
-    );
+        },
+      );
+    }
   }
 
   Future<QRCodeResponse> getUser(String idUser, String tenant) async {

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:identity_engine/core/Routes/router.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
 import 'package:identity_engine/core/presentation/home/home_screen.dart';
+import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_screen.dart';
 
 class CustomModalIdentity extends StatelessWidget {
@@ -15,6 +16,7 @@ class CustomModalIdentity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller= Get.find<IdentitiesController>();
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -95,7 +97,9 @@ class CustomModalIdentity extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Get.offNamed(Routes.home);
+                        identity.progressValue.value =-1;  
+                        controller.startProgressAnimation(identity);
+                    Get.back()  ;
                   },
                   child: const Text(
                     'Cerrar',
