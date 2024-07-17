@@ -75,7 +75,7 @@ class ScannerController extends GetxController {
       var infophone = await initPlatformState();
       // Añadir la identidad desencriptada
       var responseDecodeScanLogin = await loginUser(
-          idUser, infophone['device'] + '-das' + infophone['model'], tenant);
+          idUser, infophone['device'] + '-' + infophone['model'], tenant);
 
       if (responseDecodeScanLogin.status == 'success') {
         await identitiesController.addIdentity(
