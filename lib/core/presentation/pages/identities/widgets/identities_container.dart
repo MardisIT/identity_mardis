@@ -21,87 +21,7 @@ class IdentitiesContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Column(
-    //   children: [
-    //     const SizedBox(height: 5),
-    //     Container(
-    //       height: 100,
-    //       width: double.infinity,
-    //       padding: const EdgeInsets.only(left: 15),
-    //       decoration: BoxDecoration(
-    //         border: Border(
-    //           bottom: BorderSide(
-    //             color: Colors.grey.shade400,
-    //             width: 1,
-    //           ),
-    //         ),
-    //       ),
-    //       child: Row(
-    //         children: [
-    //           Obx(
-    //             () => SizedBox(
-    //               height: 50,
-    //               width: 50,
-    //               child: CircularProgressIndicator(
-    //                 value: identity.progressValue.value,
-    //                 valueColor: AlwaysStoppedAnimation(
-    //                   Colors.red.shade100,
-    //                 ),
-    //                 backgroundColor: Colors.red,
-    //               ),
-    //             ),
-    //           ),
-    //           Expanded(
-    //             child: Padding(
-    //               padding: const EdgeInsets.only(left: 35),
-    //               child: Column(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   Text(
-    //                     '${identity.systemAplication} - ${identity.email}',
-    //                     style: TextStyle(
-    //                       fontSize: 17,
-    //                       color: Colors.black,
-    //                     ),
-    //                   ),
-    //                   Obx(
-    //                     () {
-    //                       return Text(
-    //                         identity.code!.value,
-    //                         // controller.identityData.value.code.toString(),
-    //                         style: const TextStyle(
-    //                           fontSize: 35,
-    //                           fontWeight: FontWeight.w500,
-    //                           color: Colors.black,
-    //                         ),
-    //                       );
-    //                     },
-    //                   )
-    //                 ],
-    //               ),
-    //             ),
-    //           ),
-    //           Obx(
-    //             () => controller.isDeleteMode.value
-    //                 ? Checkbox(
-    //                     value: controller.isDeleteMode.value
-    //                         ? controller.identitiesToDelete.contains(identity)
-    //                         : identity.isChecked.value,
-    //                     onChanged: (value) {
-    //                       controller.toggleCheckbox(identity);
-    //                     },
-    //                     activeColor: Colors.red,
-    //                   )
-    //                 : const SizedBox.shrink(),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ],
-    // );
-    return 
-    Column(
+    return Column(
       children: [
         const SizedBox(height: 10),
         Container(
@@ -187,14 +107,26 @@ class IdentitiesContainer extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Expanded(
-                  flex: 1,
-                  child: Icon(
-                    Icons.navigate_next_rounded,
-                    size: 45,
-                    color: Colors.black,
-                  ),
-                )
+                Obx(
+                  () => controller.isDeleteMode.value
+                      ? Checkbox(
+                          value: controller.isDeleteMode.value
+                              ? controller.identitiesToDelete.contains(identity)
+                              : identity.isChecked.value,
+                          onChanged: (value) {
+                            controller.toggleCheckbox(identity);
+                          },
+                          activeColor: Colors.red,
+                        )
+                      : const Expanded(
+                          flex: 1,
+                          child: Icon(
+                            Icons.navigate_next_rounded,
+                            size: 45,
+                            color: Colors.black,
+                          ),
+                        ),
+                ),
               ],
             ),
           ),
@@ -202,12 +134,14 @@ class IdentitiesContainer extends StatelessWidget {
       ],
     );
   }
-  
+
   void showDialog(Identity _identity) {
-    _identity.progressValue.value =  1.0;//         identity.time.toDouble();    
+    _identity.progressValue.value = 1.0; //         identity.time.toDouble();
     controller.startProgressAnimation(_identity);
     Get.dialog(
-      CustomModalIdentity(identity: _identity,),
+      CustomModalIdentity(
+        identity: _identity,
+      ),
     );
   }
 }

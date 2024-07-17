@@ -6,7 +6,6 @@ import 'package:identity_engine/core/domain/Models/login/user_view_model.dart';
 import 'package:identity_engine/core/infrastructure/base/userIdentityService.dart';
 import 'package:identity_engine/core/infrastructure/base/userIndentity_ET.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
-import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
 import 'package:identity_engine/core/presentation/widget/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

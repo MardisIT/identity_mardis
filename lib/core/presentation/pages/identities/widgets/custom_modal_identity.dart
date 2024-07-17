@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:identity_engine/core/Routes/router.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
-import 'package:identity_engine/core/presentation/home/home_screen.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
-import 'package:identity_engine/core/presentation/pages/identities/identities_screen.dart';
 
 class CustomModalIdentity extends StatelessWidget {
   const CustomModalIdentity({
@@ -16,7 +13,7 @@ class CustomModalIdentity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller= Get.find<IdentitiesController>();
+    final controller = Get.find<IdentitiesController>();
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -88,23 +85,20 @@ class CustomModalIdentity extends StatelessWidget {
                 width: 150,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    // backgroundColor: Colors.white,
-                    side: const BorderSide(
-                      color: Colors.black,
-                    ),
+                    backgroundColor: Colors.black,
                   ),
                   onPressed: () {
-                        identity.progressValue.value =-1;  
-                        controller.startProgressAnimation(identity);
-                    Get.back()  ;
+                    identity.progressValue.value = -1;
+                    controller.startProgressAnimation(identity);
+                    Get.back();
                   },
                   child: const Text(
                     'Cerrar',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 20,
                     ),
                   ),
