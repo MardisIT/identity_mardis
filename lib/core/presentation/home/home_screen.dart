@@ -41,8 +41,9 @@ class HomeScreen extends GetWidget<HomeController> {
         },
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
+        color: Colors.white,
         notchMargin: 10,
+        
         child: Obx(
           () => Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

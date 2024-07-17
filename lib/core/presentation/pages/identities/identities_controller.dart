@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
