@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
@@ -105,8 +107,12 @@ class IdentitiesController extends GetxController {
 
   //************************************************************************************************
 
+ 
   Future<void> addIdentity(String id, int time, String code,
-      String systemAplication, String email, String tenant) async {
+      String systemAplication, String email, String tenant,String infophone) async {
+   String macAddress;
+
+ 
     identityData.value = Identity(
         id: id,
         time: time,
@@ -118,7 +124,7 @@ class IdentitiesController extends GetxController {
         tenant: tenant);
 //************************************************************************************************
     var person = Userindentity(
-        id, time, int.parse(code), systemAplication, email, tenant, '');
+        id, time, int.parse(code), systemAplication, email, tenant, infophone);
     await _service.add(person);
 
     identities.add(identityData.value);
@@ -212,4 +218,6 @@ class IdentitiesController extends GetxController {
     }
     return loginResponse;
   }
+
+
 }
