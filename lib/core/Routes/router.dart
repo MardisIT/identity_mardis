@@ -13,7 +13,7 @@ import 'package:identity_engine/main_bindings.dart';
 
 class Routes {
   static const String splash = '/splash';
-  static const String home = '/login';
+  static const String home = '/home';
   static const String identities = '/identities';
   static const String scanner = '/scanner';
   static const String configuration = '/configuration';

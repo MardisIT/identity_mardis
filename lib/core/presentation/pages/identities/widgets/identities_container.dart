@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
+import 'package:identity_engine/core/presentation/pages/identities/widgets/custom_modal_identity.dart';
 import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
 
 class IdentitiesContainer extends StatelessWidget {
@@ -99,7 +100,8 @@ class IdentitiesContainer extends StatelessWidget {
     //     ),
     //   ],
     // );
-    return Column(
+    return 
+    Column(
       children: [
         const SizedBox(height: 10),
         Container(
@@ -121,17 +123,18 @@ class IdentitiesContainer extends StatelessWidget {
           ),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 0),
-                foregroundColor: Colors.blue),
-            onPressed: () {},
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              foregroundColor: Colors.black,
+            ),
+            onPressed: () {
+              showDialog();
+            },
             child: Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Obx(
-                //   () =>
                 Container(
                   height: double.maxFinite,
                   width: 10,
@@ -145,35 +148,34 @@ class IdentitiesContainer extends StatelessWidget {
                     color: Colors.grey[350],
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  // child: Icon(Icons.account_box_outlined),
                   child: const Icon(
                     Icons.assignment_ind_rounded,
                     size: 35,
                     color: Colors.black,
                   ),
                 ),
-                const Expanded(
+                Expanded(
                   flex: 5,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           // '${identity.systemAplication} - ${identity.email}',
-                          'Engine',
-                          style: TextStyle(
+                          // 'Engine',
+                          identity.systemAplication,
+                          style: const TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
-                        // Obx(
-                        //   () =>
                         Text(
                           // identity.code!.value,
-                          'olarreategui@mardisresearch.com',
-                          style: TextStyle(
+                          // 'olarreategui@mardisresearch.com',
+                          identity.email,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: Colors.black54,
@@ -181,24 +183,29 @@ class IdentitiesContainer extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        // )
                       ],
                     ),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Icon(
                     Icons.navigate_next_rounded,
                     size: 45,
                     color: Colors.black,
                   ),
-                ),
+                )
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+  
+  void showDialog() {
+    Get.dialog(
+      CustomModalIdentity(identity: controller.identities[index],),
     );
   }
 }

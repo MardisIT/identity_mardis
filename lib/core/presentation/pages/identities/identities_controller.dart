@@ -67,48 +67,16 @@ class IdentitiesController extends GetxController {
       }
     }
   }
+  Future<void> addIdentity(
+      String id,
+      int time,
+      String code,
+      String systemAplication,
+      String email,
+      String tenant,
+      String infophone) async {
+    String macAddress;
 
-//************************************************************************************************
-
-  // Future<void> updateIdentity(String id, int time, String code,
-  //     String systemAplication, String email) async {
-  //   // Identity newIdentity = Identity(
-  //   //   id: id.value,
-  //   //   time: time,
-  //   //   codestaitc: code.value,
-  //   //   systemAplication: systemAplication.value,
-  //   //   email: email.value,
-  //   //   jsonPreference: '',
-  //   // );
-
-  //   identityData.value = Identity(
-  //     id: id,
-  //     time: time,
-  //     systemAplication: systemAplication,
-  //     email: email,
-  //     jsonPreference: '',
-  //   );
-
-  //   final identityJson = jsonEncode(identityData);
-  //   identityData.value.jsonPreference = identityJson;
-  //   identities.add(identityData.value);
-  //   final prefs = await SharedPreferences.getInstance();
-
-  //   List<String> identityStrings =
-  //       identities.map((i) => i.jsonPreference).toList();
-
-  //   await prefs.setStringList('identities', identityStrings);
-  //   startProgressAnimation(identityData.value);
-  // }
-
-  //************************************************************************************************
-
- 
-  Future<void> addIdentity(String id, int time, String code,
-      String systemAplication, String email, String tenant,String infophone) async {
-   String macAddress;
-
- 
     identityData.value = Identity(
         id: id,
         time: time,
@@ -171,7 +139,6 @@ class IdentitiesController extends GetxController {
   //* Metodos para eliminacion de identidades
 
   void startProgressAnimation(Identity identity) {
-    final ScannerController scannerController = Get.find();
     int durationInSeconds = identity.time;
     int steps = durationInSeconds * 10; // 10 steps per second
     const int stepDuration = 1000 ~/ 10; // 100 milliseconds per step
@@ -214,6 +181,4 @@ class IdentitiesController extends GetxController {
     }
     return loginResponse;
   }
-
-
 }
