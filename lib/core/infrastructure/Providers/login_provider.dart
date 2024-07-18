@@ -19,4 +19,10 @@ class LoginProvider extends ILoginProvider {
       {required String idUser, required String tenant}) async {
     return await _loginResponse.getUser(idUser, tenant);
   }
+  
+  @override
+  Future<QRCodeResponse> deleteUserFromQR(
+    {required String idUser, required String tenant}) async {
+    return await _loginResponse.unlockUser(idUser, tenant);
+  }
 }

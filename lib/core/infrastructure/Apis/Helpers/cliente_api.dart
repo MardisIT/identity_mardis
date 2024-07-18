@@ -4,13 +4,14 @@ enum Service {
   Login,
   QrLogin,
   QrRegenerate,
+  UnlockUser,
 }
 
 class HTTP {
   static const String Login = "/Supervisor/LoginSupervisor";
   static const String QrLogin = "/login/ScanLoginQR";
   static const String QrRegenerate = "/login/UpdateSecurityCode?IdUser=";
-
+  static const String UnlockUser = "/login/unLockUserSecurityCode?IdUser=";
 
   static String getSufix(Service service) {
     switch (service) {
@@ -20,6 +21,8 @@ class HTTP {
         return QrLogin;
       case Service.QrRegenerate:
         return QrRegenerate;
+      case Service.UnlockUser:
+        return UnlockUser;
       default:
         return "";
     }

@@ -114,7 +114,7 @@ class IdentitiesContainer extends StatelessWidget {
                               ? controller.identitiesToDelete.contains(identity)
                               : identity.isChecked.value,
                           onChanged: (value) {
-                            controller.toggleCheckbox(identity);
+                            controller.toggleCheckbox(identity, index);
                           },
                           activeColor: Colors.red,
                         )

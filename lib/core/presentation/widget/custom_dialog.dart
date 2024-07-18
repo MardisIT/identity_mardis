@@ -10,22 +10,22 @@ class CustomDialog extends StatelessWidget {
     final IdentitiesController identitiesController = Get.find();
     return AlertDialog(
       icon: Container(
-        height: 80,
-        width: 80,
+        height: 60,
+        width: 60,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(color: Colors.red, width: 5),
         ),
         child: const Icon(
           Icons.question_mark_outlined,
-          size: 60,
+          size: 40,
           color: Colors.red,
         ),
       ),
       title: const Text(
         'Confirmar eliminación',
         style: TextStyle(
-          fontSize: 25,
+          fontSize: 22,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -38,16 +38,14 @@ class CustomDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SizedBox(
-              height: 50,
-              width: 120,
+              height: 40,
+              width: 100,
               child: TextButton(
-                style: ButtonStyle(
-                  side: WidgetStateProperty.all(
-                    const BorderSide(
-                      color: Colors.black,
-                      width: 2,
-                    ),
+                 style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all<Color>(
+                    Colors.black,
                   ),
+                
                 ),
                 onPressed: () {
                   identitiesController.cancelDeleteMode();
@@ -56,15 +54,15 @@ class CustomDialog extends StatelessWidget {
                 child: const Text(
                   'Cancelar',
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
+                    color: Colors.white,
+                    fontSize: 16,
                   ),
                 ),
               ),
             ),
             SizedBox(
-              height: 50,
-              width: 120,
+              height: 40,
+              width: 100,
               child: TextButton(
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all<Color>(
@@ -79,7 +77,7 @@ class CustomDialog extends StatelessWidget {
                   'Eliminar',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: 16,
                   ),
                 ),
               ),

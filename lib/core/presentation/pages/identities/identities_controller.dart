@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
@@ -6,6 +9,7 @@ import 'package:identity_engine/core/domain/Models/login/user_view_model.dart';
 import 'package:identity_engine/core/infrastructure/base/userIdentityService.dart';
 import 'package:identity_engine/core/infrastructure/base/userIndentity_ET.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
+import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
 import 'package:identity_engine/core/presentation/widget/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +24,7 @@ class IdentitiesController extends GetxController {
 
   var identities = <Identity>[].obs;
 
+  var deleteIdentitesIndex = <int>[].obs;
   var identitiesToDelete = <Identity>[].obs;
   var isDeleteMode = false.obs;
 
@@ -75,7 +80,7 @@ class IdentitiesController extends GetxController {
       String email,
       String tenant,
       String infophone) async {
-    String macAddress;
+      String macAddress;
 
     identityData.value = Identity(
         id: id,
@@ -102,14 +107,25 @@ class IdentitiesController extends GetxController {
   Future<void> removeSelectedIdentities() async {
     final prefs = await SharedPreferences.getInstance();
     List<String> currentIdentities = prefs.getStringList('identities') ?? [];
-
-    for (var identity in identitiesToDelete) {
-      currentIdentities.remove(identity.id);
+  //  var listIdentity =   await _service.getAll();
+    for (var identity in deleteIdentitesIndex) {
+   var model=await   _service.getatById(identity);
+   var result=await deleteUser(model!.id, model!.tenant);
+      if(result){
+      await _service.deleteat(identity);
+      
+      }else{
+    Get.snackbar(
+        'Error',
+        'Fallo el desbloqueo del usuario',
+        backgroundColor: Colors.red.withOpacity(0.5),
+        colorText: Colors.white,
+      );
+      }
     }
-
-    await prefs.setStringList('identities', currentIdentities);
-    loadIdentities();
-    isDeleteMode.value = false;
+       deleteIdentitesIndex.clear();
+      isDeleteMode.value = false;
+       loadIdentities();
   }
 
   void showDeleteConfirmationDialog() {
@@ -118,10 +134,13 @@ class IdentitiesController extends GetxController {
     );
   }
 
-  void toggleCheckbox(Identity identity) {
+  void toggleCheckbox(Identity identity,int index) {
     if (identitiesToDelete.contains(identity)) {
+
       identitiesToDelete.remove(identity);
+      deleteIdentitesIndex.remove(index);
     } else {
+      deleteIdentitesIndex.add(index);
       identitiesToDelete.add(identity);
     }
   }
@@ -133,6 +152,7 @@ class IdentitiesController extends GetxController {
 
   void cancelDeleteMode() {
     isDeleteMode.value = false;
+     deleteIdentitesIndex.clear();
     identitiesToDelete.clear();
   }
 
@@ -183,5 +203,16 @@ class IdentitiesController extends GetxController {
       loadIdentities();
     }
     return loginResponse;
+  }
+    Future<bool> deleteUser(String idUser, String tenant) async {
+    QRCodeResponse loginResponse = await loginProverInterface.deleteUserFromQR(
+      idUser: idUser,
+      tenant: tenant,
+    );
+   if (loginResponse.status == "success") {
+         return true;
+    }
+    
+    return false;
   }
 }

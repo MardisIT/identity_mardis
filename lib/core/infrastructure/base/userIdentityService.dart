@@ -20,6 +20,10 @@ class Useridentityservice {
     final box = await this.box;
     await box.delete(useridentity.id);
   }
+Future<void> deleteat(int useridentity) async {
+    final box = await this.box;
+    await box.deleteAt(useridentity);
+  }
 
   Future<List<Userindentity>> getAll() async {
     final box = await this.box;
@@ -30,7 +34,10 @@ class Useridentityservice {
     final box = await this.box;
     return box.get(id);
   }
-
+ Future<Userindentity?> getatById(int id) async {
+    final box = await this.box;
+    return box.getAt(id);
+  }
   Future<void> deleteAll() async {
     final box = await this.box;
     await box.clear();

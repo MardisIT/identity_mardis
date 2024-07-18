@@ -29,4 +29,27 @@ class LoginRequestGet {
       );
     }
   }
+
+    Future<QRCodeResponse> unlockUser(String idUser, String tenant) async {
+    var url = HTTP.getAddress(Service.UnlockUser);
+
+    try {
+      Uri combinedUrl = Uri.parse(url + idUser);
+      GetRequest service = await _callApi.getTennat(combinedUrl, tenant);
+      if (service.complete && service.response.isNotEmpty) {
+        var jsonResponse = json.decode(service.response);
+        var result = QRCodeResponse.fromJson(jsonResponse);
+        return result;
+      }
+      return QRCodeResponse(
+        status: '',
+        messege: '',
+      );
+    } catch (e) {
+      return QRCodeResponse(
+        status: '',
+        messege: '',
+      );
+    }
+  }
 }
