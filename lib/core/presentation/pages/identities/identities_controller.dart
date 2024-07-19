@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.dart';
@@ -10,7 +8,6 @@ import 'package:identity_engine/core/infrastructure/base/userIdentityService.dar
 import 'package:identity_engine/core/infrastructure/base/userIndentity_ET.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
 import 'package:identity_engine/core/presentation/widget/widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class IdentitiesController extends GetxController {
   ILoginProvider loginProverInterface;
@@ -74,44 +71,45 @@ class IdentitiesController extends GetxController {
   }
 
   Future<void> addIdentity(
-      String id,
-      int time,
-      String code,
-      String systemAplication,
-      String email,
-      String tenant,
-      String infophone) async {
-    String macAddress;
-
+    String id,
+    int time,
+    String code,
+    String systemAplication,
+    String email,
+    String tenant,
+    String infophone,
+  ) async {
     identityData.value = Identity(
-        id: id,
-        time: time,
-        // code: code,
-        codestaitc: code,
-        systemAplication: systemAplication,
-        email: email,
-        jsonPreference: '',
-        tenant: tenant);
-//************************************************************************************************
+      id: id,
+      time: time,
+      // code: code,
+      codestaitc: code,
+      systemAplication: systemAplication,
+      email: email,
+      jsonPreference: '',
+      tenant: tenant,
+    );
     var person = Userindentity(
-        id, time, int.parse(code), systemAplication, email, tenant, infophone);
+      id,
+      time,
+      int.parse(code),
+      systemAplication,
+      email,
+      tenant,
+      infophone,
+    );
     await _service.add(person);
 
     identities.add(identityData.value);
-//************************************************************************************************
     identityData.value.code!.value = code;
-    // startProgressAnimation(identityData.value);
   }
 
   //* Metodos para eliminacion de identidades
 
   Future<void> removeSelectedIdentities() async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> currentIdentities = prefs.getStringList('identities') ?? [];
-    //  var listIdentity =   await _service.getAll();
     for (var identity in deleteIdentitesIndex) {
       var model = await _service.getatById(identity);
-      var result = await deleteUser(model!.id, model!.tenant);
+      var result = await deleteUser(model!.id, model.tenant);
       if (result) {
         await _service.deleteat(identity);
       } else {
@@ -216,7 +214,6 @@ class IdentitiesController extends GetxController {
     return false;
   }
 
-  // ****************************************************************
 
   void filterIdentities(String query) {
     if (query.isEmpty) {
@@ -229,5 +226,4 @@ class IdentitiesController extends GetxController {
           .toList();
     }
   }
-  // ****************************************************************
 }

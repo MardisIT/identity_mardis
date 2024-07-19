@@ -6,10 +6,25 @@ import 'package:local_auth/local_auth.dart';
 
 class HomeController extends GetxController {
   late PageController pageController;
-  RxInt currentPage = 0.obs;
-
   final LocalAuthentication auth = LocalAuthentication();
+  final TextEditingController searchController = TextEditingController();
+  RxInt currentPage = 0.obs;
   RxBool isAuthenticated = false.obs;
+  RxBool isSearching = false.obs;
+
+  @override
+  void onInit() async {
+    pageController = PageController(initialPage: 0);
+
+    _authenticate().then(
+      (_) {
+        if (!isAuthenticated.value) {
+          SystemNavigator.pop();
+        }
+      },
+    );
+    super.onInit();
+  }
 
   void goToTab(int page) {
     currentPage.value = page;
@@ -27,40 +42,27 @@ class HomeController extends GetxController {
 
   Future<void> _authenticate() async {
     try {
-      isAuthenticated.value = await auth.authenticate(
-        localizedReason: 'Please authenticate to access this feature',
-        options: const AuthenticationOptions(
-          useErrorDialogs: true,
-          stickyAuth: true,
-        ),
-      );
+      bool canCheckBiometrics = await auth.canCheckBiometrics;
+      bool isDeviceSupported = await auth.isDeviceSupported();
+      
+      if (canCheckBiometrics && isDeviceSupported) {
+        isAuthenticated.value = await auth.authenticate(
+          localizedReason: 'Please authenticate to access this feature',
+          options: const AuthenticationOptions(
+            useErrorDialogs: true,
+            stickyAuth: true,
+          ),
+        );
+      } else {
+        // Si el dispositivo no soporta autenticación biométrica, continuar sin autenticación
+        isAuthenticated.value = true;
+      }
     } catch (e) {
       print(e);
+      // Si hay un error durante la autenticación, continuar sin autenticación
+      isAuthenticated.value = true;
     }
   }
-
-  @override
-  void onInit() async {
-    pageController = PageController(initialPage: 0);
-
-    _authenticate().then(
-      (_) {
-        if (!isAuthenticated.value) {
-          SystemNavigator.pop();
-        }
-      },
-    );
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    pageController.dispose();
-    super.onClose();
-  }
- //************************************************************************************************
-  RxBool isSearching = false.obs;
-  final TextEditingController searchController = TextEditingController();
 
   void startSearch() {
     isSearching.value = true;
@@ -73,5 +75,10 @@ class HomeController extends GetxController {
     searchController.clear();
     identitiesController.filterIdentities('');
   }
-  //************************************************************************************************
+
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
+  }
 }
