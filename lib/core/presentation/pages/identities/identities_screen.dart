@@ -9,19 +9,22 @@ class IdentitiesScreen extends GetWidget<IdentitiesController> {
     super.key,
   });
 
+  
+
   @override
   Widget build(BuildContext context) {
     final ScannerController scannerController = Get.find();
     return Scaffold(
       body: Obx(
-        () => controller.identities.isNotEmpty
+        // () => controller.identities.isNotEmpty
+        () => controller.filteredIdentities.isNotEmpty
             ? ListView.builder(
-                itemCount: controller.identities.length,
+                itemCount: controller.filteredIdentities.length,
                 itemBuilder: (context, index) {
                   return IdentitiesContainer(
                     controller: controller,
                     scannerController: scannerController,
-                    identity: controller.identities[index],
+                    identity: controller.filteredIdentities[index],
                     index: index,
                   );
                 },

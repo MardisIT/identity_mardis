@@ -37,12 +37,11 @@ class ScannerController extends GetxController {
     try {
       final key = utf8.encode('E1BAD35C-DBA6-4B36-AC82-58E91582');
       final iv = utf8.encode('ABF01234567CDE89');
-     
-     
-     final encryptedData = base64Decode(
-        'EFnPNpmZnC44gEzDNi+O9NfJXuddI4fkg0Kydm+08N6g2D5GzymqgTtKn31T9CWRHodhF+SSuLdHrxKYu9ZCuDRHtlD1/OgCyd8DYPG5MtI=');
+
+      final encryptedData = base64Decode(
+          'EFnPNpmZnC44gEzDNi+O9NfJXuddI4fkg0Kydm+08N6g2D5GzymqgTtKn31T9CWRHodhF+SSuLdHrxKYu9ZCuDRHtlD1/OgCyd8DYPG5MtI=');
 //       final encryptedData = base64Decode(
-    //  'D+KbjJgx/6KW7k87z3RYrtPHwuUpegb95+yJo6hh+0zHWa3bZ9//TeP0xrAslb3Qq4B5omdzRHkm29CRaPIoDA==');
+      //  'D+KbjJgx/6KW7k87z3RYrtPHwuUpegb95+yJo6hh+0zHWa3bZ9//TeP0xrAslb3Qq4B5omdzRHkm29CRaPIoDA==');
       //final encryptedData = base64Decode(result);
 
       final decryptedData = decrypt(Uint8List.fromList(encryptedData),

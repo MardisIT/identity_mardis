@@ -27,9 +27,7 @@ class IdentitiesContainer extends StatelessWidget {
         Container(
           height: 80,
           width: double.infinity,
-          // padding: const EdgeInsets.only(left: 15),
           decoration: BoxDecoration(
-            color: Colors.white,
             border: Border(
               bottom: BorderSide(
                 color: Colors.grey.shade400,
@@ -48,12 +46,12 @@ class IdentitiesContainer extends StatelessWidget {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 0),
               foregroundColor: Colors.black,
+              backgroundColor: Colors.white,
             ),
             onPressed: () {
               showDialog(identity);
             },
             child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   height: double.maxFinite,
@@ -83,17 +81,14 @@ class IdentitiesContainer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          // '${identity.systemAplication} - ${identity.email}',
-                          // 'Engine',
                           identity.systemAplication,
                           style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text(
-                          // identity.code!.value,
-                          // 'olarreategui@mardisresearch.com',
                           identity.email,
                           style: const TextStyle(
                             fontSize: 16,

@@ -1,12 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:identity_engine/core/infrastructure/base/userIdentityAdapter.dart';
-import 'package:identity_engine/core/infrastructure/base/userIdentityService.dart';
-import 'package:identity_engine/core/infrastructure/base/userIndentity_ET.dart';
+import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 import 'package:local_auth/local_auth.dart';
 
 class HomeController extends GetxController {
@@ -44,17 +39,9 @@ class HomeController extends GetxController {
     }
   }
 
-  final Useridentityservice _service = Useridentityservice();
   @override
   void onInit() async {
     pageController = PageController(initialPage: 0);
-    //  var path = Directory.current.path;
-
-
-//   var person = Userindentity(  'Dave', 22, 22,  'Dave',  'Dave',  'Dave');
-// // _service.add(person);
-// var test=await _service.getAll();
-//   print(test); // Dave: 22
 
     _authenticate().then(
       (_) {
@@ -71,4 +58,20 @@ class HomeController extends GetxController {
     pageController.dispose();
     super.onClose();
   }
+ //************************************************************************************************
+  RxBool isSearching = false.obs;
+  final TextEditingController searchController = TextEditingController();
+
+  void startSearch() {
+    isSearching.value = true;
+  }
+
+  void stopSearch() {
+    final IdentitiesController identitiesController = Get.find();
+
+    isSearching.value = false;
+    searchController.clear();
+    identitiesController.filterIdentities('');
+  }
+  //************************************************************************************************
 }

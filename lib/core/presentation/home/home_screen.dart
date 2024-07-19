@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
 import 'package:identity_engine/core/presentation/pages/configuration/configuration_screen.dart';
+import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_screen.dart';
 import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_screen.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -10,42 +11,96 @@ class HomeScreen extends GetWidget<HomeController> {
   const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Mardis Identity',
-          style: TextStyle(
-            color: Colors.white,
-          ),
+    final IdentitiesController identitiesController = Get.find();
+
+    return Obx(
+      () => Scaffold(
+        appBar: AppBar(
+          title: controller.isSearching.value
+              ? TextField(
+                  controller: controller.searchController,
+                  autofocus: true,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  decoration: const InputDecoration(
+                    hintText: 'Buscar...',
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onChanged: (query) {
+                    identitiesController.filterIdentities(query);
+                  },
+                )
+              : const Text(
+                  'Mardis Identity',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+          leading: controller.isSearching.value
+              ? IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: controller.stopSearch,
+                )
+              : null,
+          actions: controller.isSearching.value
+              ? [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      controller.searchController.clear();
+                      identitiesController.filterIdentities('');
+                    },
+                  ),
+                ]
+              : [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ),
+                    onPressed: controller.startSearch,
+                  )
+                ],
         ),
-      ),
-      body: Obx(
-        () {
-          if (controller.isAuthenticated.value) {
-            return PageView(
-              onPageChanged: controller.animateToTab,
-              controller: controller.pageController,
-              
-              physics: const BouncingScrollPhysics(),
-              children: [
-                IdentitiesScreen(),
-                ScannerScreen(),
-                ConfigurationScreen(),
-              ],
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        notchMargin: 10,
-        
-        child: Obx(
-          () => Row(
+        body:
+            // Obx(
+            //   () {
+            controller.isAuthenticated.value
+                ? PageView(
+                    onPageChanged: controller.animateToTab,
+                    controller: controller.pageController,
+                    physics: const BouncingScrollPhysics(),
+                    children: [
+                      const IdentitiesScreen(),
+                      const ScannerScreen(),
+                      const ConfigurationScreen(),
+                    ],
+                  )
+                // } else {
+                //   return
+                : const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+        // }
+        //   },
+        // ),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white,
+          notchMargin: 10,
+          child:
+              // Obx(
+              //   () =>
+              Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _bottomAppBarItem(
@@ -68,6 +123,7 @@ class HomeScreen extends GetWidget<HomeController> {
               // ),
             ],
           ),
+          // ),
         ),
       ),
     );
