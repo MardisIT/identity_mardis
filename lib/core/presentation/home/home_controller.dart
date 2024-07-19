@@ -59,8 +59,6 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       print(e);
-      // Si hay un error durante la autenticación, continuar sin autenticación
-      isAuthenticated.value = true;
     }
   }
 
