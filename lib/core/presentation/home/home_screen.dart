@@ -72,35 +72,24 @@ class HomeScreen extends GetWidget<HomeController> {
                   )
                 ],
         ),
-        body:
-            // Obx(
-            //   () {
-            controller.isAuthenticated.value
-                ? PageView(
-                    onPageChanged: controller.animateToTab,
-                    controller: controller.pageController,
-                    physics: const BouncingScrollPhysics(),
-                    children: [
-                      const IdentitiesScreen(),
-                      const ScannerScreen(),
-                      const ConfigurationScreen(),
-                    ],
-                  )
-                // } else {
-                //   return
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-        // }
-        //   },
-        // ),
+        body: controller.isAuthenticated.value
+            ? PageView(
+                onPageChanged: controller.animateToTab,
+                controller: controller.pageController,
+                physics: const BouncingScrollPhysics(),
+                children: const [
+                  IdentitiesScreen(),
+                  ScannerScreen(),
+                  ConfigurationScreen(),
+                ],
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ),
         bottomNavigationBar: BottomAppBar(
           color: Colors.white,
           notchMargin: 10,
-          child:
-              // Obx(
-              //   () =>
-              Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _bottomAppBarItem(
@@ -115,12 +104,12 @@ class HomeScreen extends GetWidget<HomeController> {
                 page: 1,
                 label: 'Escaneo de QR',
               ),
-              // _bottomAppBarItem(
-              //   context,
-              //   icon: Icons.settings_rounded,
-              //   page: 2,
-              //   label: 'Configuración',
-              // ),
+              _bottomAppBarItem(
+                context,
+                icon: Icons.perm_device_information_rounded,
+                page: 2,
+                label: 'Información',
+              ),
             ],
           ),
           // ),

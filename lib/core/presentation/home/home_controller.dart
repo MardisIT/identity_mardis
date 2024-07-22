@@ -44,7 +44,7 @@ class HomeController extends GetxController {
     try {
       bool canCheckBiometrics = await auth.canCheckBiometrics;
       bool isDeviceSupported = await auth.isDeviceSupported();
-      
+
       if (canCheckBiometrics && isDeviceSupported) {
         isAuthenticated.value = await auth.authenticate(
           localizedReason: 'Please authenticate to access this feature',
@@ -77,6 +77,7 @@ class HomeController extends GetxController {
   @override
   void onClose() {
     pageController.dispose();
+    searchController.dispose();
     super.onClose();
   }
 }
