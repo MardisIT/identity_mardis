@@ -133,6 +133,7 @@ class IdentitiesContainer extends StatelessWidget {
   void showDialog(Identity identity) {
     identity.progressValue.value = 1.0; //         identity.time.toDouble();
     controller.startProgressAnimation(identity);
+
     Get.dialog(
       CustomModalIdentity(
         identity: identity,
