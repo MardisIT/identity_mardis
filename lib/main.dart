@@ -16,7 +16,7 @@ void main() async {
       title: 'Identity Engine',
       theme: appTheme,
       getPages: RoutesPages.pages,
-      initialRoute: Routes.home,
+      initialRoute: Routes.auth,
       initialBinding: MainBindings(),
     ),
   );

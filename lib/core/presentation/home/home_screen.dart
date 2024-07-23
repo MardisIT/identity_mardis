@@ -17,7 +17,8 @@ class HomeScreen extends GetWidget<HomeController> {
     return Obx(
       () => Scaffold(
         appBar: AppBar(
-          title: (controller.isSearching.value && controller.currentPage.value == 0)
+          title: (controller.isSearching.value &&
+                  controller.currentPage.value == 0)
               ? TextField(
                   controller: controller.searchController,
                   autofocus: true,
@@ -41,7 +42,8 @@ class HomeScreen extends GetWidget<HomeController> {
                     color: Colors.white,
                   ),
                 ),
-          leading: (controller.isSearching.value && controller.currentPage.value == 0)
+          leading: (controller.isSearching.value &&
+                  controller.currentPage.value == 0)
               ? IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
@@ -50,7 +52,8 @@ class HomeScreen extends GetWidget<HomeController> {
                   onPressed: controller.stopSearch,
                 )
               : null,
-          actions: (controller.isSearching.value && controller.currentPage.value == 0)
+          actions: (controller.isSearching.value &&
+                  controller.currentPage.value == 0)
               ? [
                   IconButton(
                     icon: const Icon(
@@ -74,20 +77,16 @@ class HomeScreen extends GetWidget<HomeController> {
                     )
                 ],
         ),
-        body: controller.isAuthenticated.value
-            ? PageView(
-                onPageChanged: controller.animateToTab,
-                controller: controller.pageController,
-                physics: const BouncingScrollPhysics(),
-                children: const [
-                  IdentitiesScreen(),
-                  ScannerScreen(),
-                  ConfigurationScreen(),
-                ],
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
-              ),
+        body: PageView(
+          onPageChanged: controller.animateToTab,
+          controller: controller.pageController,
+          physics: const BouncingScrollPhysics(),
+          children: const [
+            IdentitiesScreen(),
+            ScannerScreen(),
+            ConfigurationScreen(),
+          ],
+        ),
         bottomNavigationBar: BottomAppBar(
           color: Colors.white,
           notchMargin: 10,

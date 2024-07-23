@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:identity_engine/core/presentation/Authentication/auth_binginds.dart';
+import 'package:identity_engine/core/presentation/Authentication/auth_screen.dart';
 import 'package:identity_engine/core/presentation/home/home_bindings.dart';
 import 'package:identity_engine/core/presentation/initialMain/initial_main_bindings.dart';
 import 'package:identity_engine/core/presentation/initialMain/initial_main_screen.dart';
@@ -13,6 +15,7 @@ import 'package:identity_engine/main_bindings.dart';
 
 class Routes {
   static const String splash = '/splash';
+  static const String auth = '/auth';
   static const String home = '/home';
   static const String identities = '/identities';
   static const String scanner = '/scanner';
@@ -25,6 +28,11 @@ class RoutesPages {
       name: Routes.splash,
       page: () => const MainScreen(),
       bindings: [MainBindingsExt(), MainBindings()],
+    ),
+    GetPage(
+      name: Routes.auth,
+      page: () => const AuthScreen(),
+      bindings: [MainBindingsExt(), AuthBindings()],
     ),
     GetPage(
       name: Routes.home,
