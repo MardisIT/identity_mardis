@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ConfigurationScreen extends StatelessWidget {
   const ConfigurationScreen({super.key});
@@ -20,11 +21,17 @@ class ConfigurationScreen extends StatelessWidget {
           future: scannerController.initPlatformState(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
             } else if (!snapshot.hasData || snapshot.data == null) {
-              return Center(child: Text('No data available'));
+              return const Center(
+                child: Text('No data available'),
+              );
             } else {
               var infophone = snapshot.data as Map<String, dynamic>;
               return Column(
@@ -57,7 +64,13 @@ class ConfigurationScreen extends StatelessWidget {
                         icon: Icons.policy_rounded,
                         secondIcon: Icons.navigate_next_rounded,
                         title: 'Políticas de privacidad',
-                        onTap: () {},
+                        onTap: () async {
+                          final Uri url = Uri.parse(
+                              'https://www.mardis.com.ec/politica_privacidad_datos/');
+                          if (!await launchUrl(url)) {
+                            throw 'No se pudo lanzar $url';
+                          }
+                        },
                       ),
                     ],
                   ),

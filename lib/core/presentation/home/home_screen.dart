@@ -9,6 +9,7 @@ import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class HomeScreen extends GetWidget<HomeController> {
   const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final IdentitiesController identitiesController = Get.find();
@@ -16,7 +17,7 @@ class HomeScreen extends GetWidget<HomeController> {
     return Obx(
       () => Scaffold(
         appBar: AppBar(
-          title: controller.isSearching.value
+          title: (controller.isSearching.value && controller.currentPage.value == 0)
               ? TextField(
                   controller: controller.searchController,
                   autofocus: true,
@@ -40,7 +41,7 @@ class HomeScreen extends GetWidget<HomeController> {
                     color: Colors.white,
                   ),
                 ),
-          leading: controller.isSearching.value
+          leading: (controller.isSearching.value && controller.currentPage.value == 0)
               ? IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
@@ -49,7 +50,7 @@ class HomeScreen extends GetWidget<HomeController> {
                   onPressed: controller.stopSearch,
                 )
               : null,
-          actions: controller.isSearching.value
+          actions: (controller.isSearching.value && controller.currentPage.value == 0)
               ? [
                   IconButton(
                     icon: const Icon(
@@ -63,13 +64,14 @@ class HomeScreen extends GetWidget<HomeController> {
                   ),
                 ]
               : [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                    onPressed: controller.startSearch,
-                  )
+                  if (controller.currentPage.value == 0)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                      onPressed: controller.startSearch,
+                    )
                 ],
         ),
         body: controller.isAuthenticated.value

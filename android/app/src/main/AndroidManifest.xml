@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="com.mardis.identitymardis">
+    package="com.mardis.identitymardis">
     <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- <uses-permission android:name="android.permission.USE_FINGERPRINT" /> -->
@@ -10,7 +10,10 @@ package="com.mardis.identitymardis">
     <application
         android:label="Identity Mardis"
         android:name="${applicationName}"
-        android:icon="@mipmap/icon_mardis">
+        android:icon="@mipmap/icon_mardis"
+        android:usesCleartextTraffic="true"
+    >
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
