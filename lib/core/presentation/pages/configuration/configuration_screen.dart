@@ -36,7 +36,7 @@ class ConfigurationScreen extends StatelessWidget {
                       _SectionItem(
                         icon: Icons.phone_android_rounded,
                         title: 'Dispositivo',
-                        subtitle: infophone['device'],
+                        subtitle: infophone['model'],
                       ),
                       _SectionItem(
                         icon: Icons.phonelink_setup_rounded,
