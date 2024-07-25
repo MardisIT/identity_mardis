@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 import 'package:identity_engine/core/presentation/pages/identities/widgets/custom_modal_identity.dart';
@@ -45,8 +46,8 @@ class IdentitiesContainer extends StatelessWidget {
                 borderRadius: BorderRadius.zero,
               ),
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.white,
+              foregroundColor: AppColors.black,
+              backgroundColor: AppColors.white,
             ),
             onPressed: () {
               showDialog(identity);
@@ -111,14 +112,14 @@ class IdentitiesContainer extends StatelessWidget {
                           onChanged: (value) {
                             controller.toggleCheckbox(identity, index);
                           },
-                          activeColor: Colors.red,
+                          activeColor: AppColors.red,
                         )
                       : const Expanded(
                           flex: 1,
                           child: Icon(
                             Icons.navigate_next_rounded,
                             size: 45,
-                            color: Colors.black,
+                            color: AppColors.black,
                           ),
                         ),
                 ),

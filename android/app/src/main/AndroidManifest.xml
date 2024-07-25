@@ -10,7 +10,7 @@
     <application
         android:label="Identity Mardis"
         android:name="${applicationName}"
-        android:icon="@mipmap/icon_mardis"
+        android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
     >
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 
 class CustomDialog extends StatelessWidget {
@@ -14,12 +15,12 @@ class CustomDialog extends StatelessWidget {
         width: 60,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.red, width: 5),
+          border: Border.all(color: AppColors.red, width: 5),
         ),
         child: const Icon(
           Icons.question_mark_outlined,
           size: 40,
-          color: Colors.red,
+          color: AppColors.red,
         ),
       ),
       title: const Text(
@@ -43,7 +44,7 @@ class CustomDialog extends StatelessWidget {
               child: TextButton(
                  style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all<Color>(
-                    Colors.black,
+                    AppColors.black,
                   ),
                 
                 ),
@@ -54,7 +55,7 @@ class CustomDialog extends StatelessWidget {
                 child: const Text(
                   'Cancelar',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 16,
                   ),
                 ),
@@ -66,7 +67,7 @@ class CustomDialog extends StatelessWidget {
               child: TextButton(
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all<Color>(
-                    Colors.red,
+                    AppColors.red,
                   ),
                 ),
                 onPressed: () {
@@ -76,7 +77,7 @@ class CustomDialog extends StatelessWidget {
                 child: const Text(
                   'Eliminar',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 16,
                   ),
                 ),

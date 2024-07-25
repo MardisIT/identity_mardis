@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
 import 'package:identity_engine/core/presentation/pages/configuration/configuration_screen.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
@@ -23,13 +24,13 @@ class HomeScreen extends GetWidget<HomeController> {
                   controller: controller.searchController,
                   autofocus: true,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                   ),
                   decoration: const InputDecoration(
                     hintText: 'Buscar...',
                     border: InputBorder.none,
                     hintStyle: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                     ),
                   ),
                   onChanged: (query) {
@@ -39,7 +40,7 @@ class HomeScreen extends GetWidget<HomeController> {
               : const Text(
                   'Mardis Identity',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                   ),
                 ),
           leading: (controller.isSearching.value &&
@@ -47,7 +48,7 @@ class HomeScreen extends GetWidget<HomeController> {
               ? IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: AppColors.white,
                   ),
                   onPressed: controller.stopSearch,
                 )
@@ -58,7 +59,7 @@ class HomeScreen extends GetWidget<HomeController> {
                   IconButton(
                     icon: const Icon(
                       Icons.clear,
-                      color: Colors.white,
+                      color: AppColors.white,
                     ),
                     onPressed: () {
                       controller.searchController.clear();
@@ -71,7 +72,7 @@ class HomeScreen extends GetWidget<HomeController> {
                     IconButton(
                       icon: const Icon(
                         Icons.search,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                       onPressed: controller.startSearch,
                     )
@@ -88,7 +89,7 @@ class HomeScreen extends GetWidget<HomeController> {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          color: Colors.white,
+          color: AppColors.white,
           notchMargin: 10,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -133,15 +134,15 @@ class HomeScreen extends GetWidget<HomeController> {
           Icon(
             icon,
             color: controller.currentPage.value == page
-                ? const Color(0xffFF0000)
-                : Colors.grey,
+                ? AppColors.red
+                : AppColors.grey
           ),
           Text(
             label,
             style: TextStyle(
               color: controller.currentPage.value == page
-                  ? const Color(0xffFF0000)
-                  : Colors.grey,
+                  ? AppColors.red
+                  : AppColors.grey,
               fontSize: 13,
               fontWeight:
                   controller.currentPage.value == page ? FontWeight.w600 : null,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:get/get.dart';
 import 'scanner_controller.dart';
@@ -14,7 +15,7 @@ class ScannerScreen extends GetWidget<ScannerController> {
           Expanded(
             flex: 1,
             child: Container(
-              color: Colors.white,
+              color: AppColors.white,
               child: const Center(
                 child: Text(
                   'Intente Centrar el código QR en la pantalla',
@@ -29,7 +30,7 @@ class ScannerScreen extends GetWidget<ScannerController> {
               key: controller.qrKey,
               onQRViewCreated: controller.onQRViewCreated,
               overlay: QrScannerOverlayShape(
-                borderColor: Colors.red,
+                borderColor: AppColors.red,
                 borderRadius: 10,
                 borderLength: 30,
                 borderWidth: 10,

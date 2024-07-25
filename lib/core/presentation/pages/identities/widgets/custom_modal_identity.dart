@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 
@@ -37,14 +38,14 @@ class CustomModalIdentity extends StatelessWidget {
                       text: '${identity.systemAplication}\n',
                       style: const TextStyle(
                         fontSize: 40,
-                        color: Colors.black,
+                        color: AppColors.black,
                       ),
                     ),
                     TextSpan(
                       text: identity.email,
                       style: const TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: AppColors.grey,
                       ),
                     ),
                   ],
@@ -98,7 +99,7 @@ class CustomModalIdentity extends StatelessWidget {
                   child: const Text(
                     'Cerrar',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: 20,
                     ),
                   ),

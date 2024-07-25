@@ -33,6 +33,7 @@ class RoutesPages {
       name: Routes.auth,
       page: () => const AuthScreen(),
       bindings: [MainBindingsExt(), AuthBindings()],
+      // transition: Transition.cupertino
     ),
     GetPage(
       name: Routes.home,
@@ -44,6 +45,7 @@ class RoutesPages {
         IdentitiesBindings(),
         ConfigurationBindings()
       ],
+      // transition: Transition.cupertino
     ),
     GetPage(
       name: Routes.identities,

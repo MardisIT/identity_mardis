@@ -8,37 +8,37 @@ class AuthScreen extends GetWidget<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Spacer(),
-          Image.asset(
-            'assets/MARDIS-PRINCIPAL.png',
-            height: 100,
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'Aplicación Mardis Identity bloqueada',
-            style: TextStyle(
-              fontSize: 20,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            Image.asset(
+              'assets/Logo_Mardis.png',
+              height: 80,
             ),
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: () {
-              // Aquí puedes agregar la funcionalidad para desbloquear la aplicación
-              controller.authenticate();
-            },
-            child: const Text(
-              'DESBLOQUEAR',
+            const SizedBox(height: 20),
+            const Text(
+              'Aplicación Mardis Identity bloqueada',
               style: TextStyle(
-                fontSize: 16,
-                decoration: TextDecoration.none,
+                fontSize: 20,
               ),
             ),
-          ),
-          const SizedBox(height: 60),
-        ],
+            const Spacer(),
+            GestureDetector(
+              onTap: () {
+                controller.authenticate();
+              },
+              child: const Text(
+                'DESBLOQUEAR',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(height: 60),
+          ],
+        ),
       ),
     );
   }

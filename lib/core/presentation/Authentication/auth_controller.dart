@@ -25,15 +25,19 @@ class AuthController extends GetxController {
             stickyAuth: true,
           ),
         );
-      }
-      if (isAuthenticated.value) {
-        Get.offNamed(Routes.home);
       } else {
         // Si el dispositivo no soporta autenticación biométrica, continuar sin autenticación
         isAuthenticated.value = true;
       }
     } catch (e) {
       print(e);
+      // Si ocurre un error, permitir el acceso
+      isAuthenticated.value = true;
+    }
+
+    // Después de completar la autenticación, navegar a la siguiente pantalla
+    if (isAuthenticated.value) {
+      Get.offNamed(Routes.home);
     }
   }
 }

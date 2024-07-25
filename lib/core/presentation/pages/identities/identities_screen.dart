@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
 import 'package:identity_engine/core/presentation/widget/widgets.dart';
@@ -16,7 +17,6 @@ class IdentitiesScreen extends GetWidget<IdentitiesController> {
     final ScannerController scannerController = Get.find();
     return Scaffold(
       body: Obx(
-        // () => controller.identities.isNotEmpty
         () => controller.filteredIdentities.isNotEmpty
             ? ListView.builder(
                 itemCount: controller.filteredIdentities.length,
@@ -37,7 +37,7 @@ class IdentitiesScreen extends GetWidget<IdentitiesController> {
                       'No tienes identidades.',
                       style: TextStyle(
                         fontSize: 17,
-                        color: Colors.grey,
+                        color: AppColors.grey,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -45,7 +45,7 @@ class IdentitiesScreen extends GetWidget<IdentitiesController> {
                       'Toque el icono "+" de abajo para comenzar',
                       style: TextStyle(
                         fontSize: 17,
-                        color: Colors.grey,
+                        color: AppColors.grey,
                       ),
                     ),
                   ],
@@ -58,10 +58,10 @@ class IdentitiesScreen extends GetWidget<IdentitiesController> {
           children: [
             if (controller.isDeleteMode.value)
               FloatingActionButton(
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.red,
                 child: const Icon(
                   Icons.delete,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
                 onPressed: () {
                   controller.showDeleteConfirmationDialog();

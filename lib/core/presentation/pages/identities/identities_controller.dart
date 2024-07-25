@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
 import 'package:identity_engine/core/domain/Models/login/login_response.dart';
@@ -11,11 +11,11 @@ import 'package:identity_engine/core/presentation/widget/widgets.dart';
 
 class IdentitiesController extends GetxController {
   ILoginProvider loginProverInterface;
-  final Useridentityservice _service = Useridentityservice();
   IdentitiesController({
     required this.loginProverInterface,
   });
 
+  final Useridentityservice _service = Useridentityservice();
   final HomeController homeController = Get.find();
 
   var identities = <Identity>[].obs;
@@ -26,14 +26,14 @@ class IdentitiesController extends GetxController {
   var isDeleteMode = false.obs;
 
   Rx<Identity> identityData = Identity(
-          id: '',
-          time: 0,
-          codestaitc: '',
-          systemAplication: '',
-          email: '',
-          jsonPreference: '',
-          tenant: '')
-      .obs;
+    id: '',
+    time: 0,
+    codestaitc: '',
+    systemAplication: '',
+    email: '',
+    jsonPreference: '',
+    tenant: '',
+  ).obs;
 
   Rx<QRCodeData> qrResponse = QRCodeData(
     idUser: '',
@@ -54,13 +54,14 @@ class IdentitiesController extends GetxController {
     identities.value = [];
     for (var identity in identityStrings) {
       final Identity identityModel = Identity(
-          id: identity.id,
-          time: identity.time,
-          codestaitc: identity.code.toString(),
-          systemAplication: identity.systemAplication,
-          email: identity.email,
-          jsonPreference: '',
-          tenant: identity.tenant);
+        id: identity.id,
+        time: identity.time,
+        codestaitc: identity.code.toString(),
+        systemAplication: identity.systemAplication,
+        email: identity.email,
+        jsonPreference: '',
+        tenant: identity.tenant,
+      );
       identities.add(identityModel);
       if (identityModel.progressValue.value < 1.0) {
         identityModel.code!.value = identityModel.codestaitc!;
@@ -116,8 +117,8 @@ class IdentitiesController extends GetxController {
         Get.snackbar(
           'Error',
           'Fallo el desbloqueo del usuario',
-          backgroundColor: Colors.red.withOpacity(0.5),
-          colorText: Colors.white,
+          backgroundColor: AppColors.red.withOpacity(0.5),
+          colorText: AppColors.white,
         );
       }
     }
@@ -151,6 +152,18 @@ class IdentitiesController extends GetxController {
     isDeleteMode.value = false;
     deleteIdentitesIndex.clear();
     identitiesToDelete.clear();
+  }
+
+  Future<bool> deleteUser(String idUser, String tenant) async {
+    QRCodeResponse loginResponse = await loginProverInterface.deleteUserFromQR(
+      idUser: idUser,
+      tenant: tenant,
+    );
+    if (loginResponse.status == "success") {
+      return true;
+    }
+
+    return false;
   }
 
   //* Metodos para eliminacion de identidades
@@ -201,19 +214,6 @@ class IdentitiesController extends GetxController {
     }
     return loginResponse;
   }
-
-  Future<bool> deleteUser(String idUser, String tenant) async {
-    QRCodeResponse loginResponse = await loginProverInterface.deleteUserFromQR(
-      idUser: idUser,
-      tenant: tenant,
-    );
-    if (loginResponse.status == "success") {
-      return true;
-    }
-
-    return false;
-  }
-
 
   void filterIdentities(String query) {
     if (query.isEmpty) {
