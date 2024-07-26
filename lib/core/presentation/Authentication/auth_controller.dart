@@ -1,15 +1,34 @@
 import 'package:get/get.dart';
 import 'package:identity_engine/core/Routes/router.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class AuthController extends GetxController {
   final LocalAuthentication auth = LocalAuthentication();
   RxBool isAuthenticated = false.obs;
+  RxBool isConnected = false.obs;
+  RxBool isCheckingConnection = true.obs;
 
   @override
-  void onInit() async {
-    authenticate();
+  void onInit() {
     super.onInit();
+    checkConnectivity();
+  }
+
+  Future<void> checkConnectivity() async {
+    isCheckingConnection.value = true;
+    await Future.delayed(
+      const Duration(seconds: 3),
+    );
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    isCheckingConnection.value = false;
+    if (connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi)) {
+      isConnected.value = true;
+      authenticate();
+    } else {
+      isConnected.value = false;
+    }
   }
 
   Future<void> authenticate() async {
