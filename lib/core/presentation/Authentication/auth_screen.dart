@@ -7,10 +7,9 @@ class AuthScreen extends GetWidget<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    // Mostrar el diálogo inmediatamente al cargar la pantalla
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (controller.isCheckingConnection.value) {
-        _showCheckingConnectionDialog(context);
+        controller.showCheckingConnectionDialog(context);
       }
     });
 
@@ -26,7 +25,7 @@ class AuthScreen extends GetWidget<AuthController> {
             if (!controller.isConnected.value) {
               WidgetsBinding.instance.addPostFrameCallback(
                 (_) {
-                  _showNoConnectionDialog(context);
+                  controller.showNoConnectionDialog(context);
                 },
               );
               // Mostrar contenido de conexión fallida mientras se muestra el diálogo
@@ -72,51 +71,6 @@ class AuthScreen extends GetWidget<AuthController> {
         ),
         const SizedBox(height: 60),
       ],
-    );
-  }
-
-  void _showCheckingConnectionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible:
-          false, // No se puede cerrar el diálogo tocando fuera de él
-      builder: (BuildContext context) {
-        return const AlertDialog(
-          backgroundColor: Colors.black54,
-          content: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 20),
-              Text(
-                'Verificando conexión...',
-                style: TextStyle(color: Colors.white),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _showNoConnectionDialog(BuildContext context) {
-    Get.dialog(
-      AlertDialog(
-        title: const Text('No hay conexión a Internet'),
-        content: const Text(
-            'Por favor, verifica tu conexión a internet y vuelve a intentarlo.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-              _showCheckingConnectionDialog(context);
-              controller.checkConnectivity();
-            },
-            child: const Text('REINTENTAR'),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
     );
   }
 }

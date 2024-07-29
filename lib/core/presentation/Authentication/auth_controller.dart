@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/Routes/router.dart';
+import 'package:identity_engine/core/presentation/widget/widgets.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -58,5 +60,36 @@ class AuthController extends GetxController {
     if (isAuthenticated.value) {
       Get.offNamed(Routes.home);
     }
+  }
+
+    void showCheckingConnectionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // No se puede cerrar el diálogo tocando fuera de él
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          backgroundColor: Colors.black54,
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text(
+                'Verificando conexión...',
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void showNoConnectionDialog(BuildContext context) {
+    Get.dialog(
+      barrierDismissible: false,
+      CustomDialogLostConection(),
+    );
   }
 }

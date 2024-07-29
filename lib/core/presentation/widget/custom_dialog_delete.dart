@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 
-class CustomDialog extends StatelessWidget {
-  const CustomDialog({super.key});
+class CustomDialogDelete extends StatelessWidget {
+  const CustomDialogDelete({super.key});
 
   @override
   Widget build(BuildContext context) {

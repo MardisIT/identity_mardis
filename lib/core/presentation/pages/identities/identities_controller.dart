@@ -129,7 +129,7 @@ class IdentitiesController extends GetxController {
 
   void showDeleteConfirmationDialog() {
     Get.dialog(
-      const CustomDialog(),
+      const CustomDialogDelete(),
     );
   }
 
