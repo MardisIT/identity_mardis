@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/Styles/app_colors.dart';
+import 'package:identity_engine/core/presentation/home/home_controller.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
 import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
 import 'package:identity_engine/core/presentation/widget/widgets.dart';
@@ -10,11 +11,10 @@ class IdentitiesScreen extends GetWidget<IdentitiesController> {
     super.key,
   });
 
-  
-
   @override
   Widget build(BuildContext context) {
     final ScannerController scannerController = Get.find();
+    final HomeController homeController = Get.find();
     return Scaffold(
       body: Obx(
         () => controller.filteredIdentities.isNotEmpty
@@ -29,28 +29,51 @@ class IdentitiesScreen extends GetWidget<IdentitiesController> {
                   );
                 },
               )
-            : const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'No tienes identidades.',
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: AppColors.grey,
-                      ),
+            : homeController.isSearching == false &&
+                    controller.filteredIdentities.isEmpty
+                ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'No tienes identidades.',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: AppColors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Toque el icono "+" de abajo para comenzar',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: AppColors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Toque el icono "+" de abajo para comenzar',
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: AppColors.grey,
-                      ),
+                  )
+                : const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.person_off_rounded,
+                          size: 120,
+                          color: AppColors.grey,
+                        ),
+                        Text(
+                          'No hay identidades',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: AppColors.grey
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
       ),
       floatingActionButton: Obx(
         () => Column(
@@ -76,4 +99,3 @@ class IdentitiesScreen extends GetWidget<IdentitiesController> {
     );
   }
 }
-

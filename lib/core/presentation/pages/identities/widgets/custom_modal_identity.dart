@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/domain/Models/identities.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class CustomModalIdentity extends StatelessWidget {
   const CustomModalIdentity({
@@ -73,12 +74,17 @@ class CustomModalIdentity extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    identity.code!.value,
-                    style: const TextStyle(
-                      fontSize: 35,
-                    ),
-                  ),
+                  identity.code!.value.isEmpty
+                      ? LoadingAnimationWidget.staggeredDotsWave(
+                          color: Colors.black,
+                          size: 40,
+                        )
+                      : Text(
+                          identity.code!.value,
+                          style: const TextStyle(
+                            fontSize: 35,
+                          ),
+                        )
                 ],
               ),
               // const SizedBox(height: 20),
