@@ -69,6 +69,7 @@ class CustomModalIdentity extends StatelessWidget {
                     Colors.green.shade100,
                   ),
                   backgroundColor: Colors.green,
+                  strokeWidth: 7,
                 ),
               ),
               Column(
