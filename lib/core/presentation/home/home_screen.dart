@@ -75,6 +75,7 @@ class HomeScreen extends GetWidget<HomeController> {
                         color: AppColors.white,
                       ),
                       onPressed: controller.startSearch,
+                      
                     )
                 ],
         ),

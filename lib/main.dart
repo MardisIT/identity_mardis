@@ -7,8 +7,8 @@ import 'package:identity_engine/core/infrastructure/base/userIdentityAdapter.dar
 import 'package:identity_engine/core/presentation/initialMain/initial_main_bindings.dart';
 
 void main() async {
-   await Hive.initFlutter();
-    Hive.registerAdapter(UserIdentityAdapter());
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserIdentityAdapter());
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     GetMaterialApp(

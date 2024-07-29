@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:identity_engine/core/presentation/pages/configuration/configuration_controller.dart';
 import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ConfigurationScreen extends StatelessWidget {
+class ConfigurationScreen extends GetWidget<ConfigurationController> {
   const ConfigurationScreen({super.key});
 
   @override
@@ -43,7 +44,8 @@ class ConfigurationScreen extends StatelessWidget {
                       _SectionItem(
                         icon: Icons.phone_android_rounded,
                         title: 'Dispositivo',
-                        subtitle: infophone['device'] + ' - ' + infophone['model'],
+                        subtitle:
+                            infophone['device'] + ' - ' + infophone['model'],
                       ),
                       _SectionItem(
                         icon: Icons.phonelink_setup_rounded,
@@ -55,10 +57,10 @@ class ConfigurationScreen extends StatelessWidget {
                   _Section(
                     title: 'ACERCA DE',
                     items: [
-                      const _SectionItem(
+                      _SectionItem(
                         icon: Icons.info_outline_rounded,
                         title: 'Versión',
-                        subtitle: '1.0.0',
+                        subtitle: controller.version,
                       ),
                       _SectionItem(
                         icon: Icons.policy_rounded,
