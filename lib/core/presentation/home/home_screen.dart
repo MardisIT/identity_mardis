@@ -8,7 +8,7 @@ import 'package:identity_engine/core/presentation/pages/identities/identities_sc
 import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_screen.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
-class HomeScreen extends GetWidget<HomeController> {
+class HomeScreen extends GetWidget<HomeController>{
   const HomeScreen({super.key});
 
   @override

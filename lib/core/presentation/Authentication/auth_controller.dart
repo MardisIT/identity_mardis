@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/Routes/router.dart';
 import 'package:identity_engine/core/presentation/widget/widgets.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -14,22 +15,26 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    checkConnectivity();
+    authenticate();
   }
 
   Future<void> checkConnectivity() async {
     isCheckingConnection.value = true;
+    showCheckingConnectionDialog();
+
     await Future.delayed(
       const Duration(seconds: 3),
     );
     var connectivityResult = await (Connectivity().checkConnectivity());
     isCheckingConnection.value = false;
+    Get.back();
     if (connectivityResult.contains(ConnectivityResult.mobile) ||
         connectivityResult.contains(ConnectivityResult.wifi)) {
       isConnected.value = true;
-      authenticate();
+      Get.offNamed(Routes.home);
     } else {
       isConnected.value = false;
+      showNoConnectionDialog();
     }
   }
 
@@ -58,38 +63,34 @@ class AuthController extends GetxController {
 
     // Después de completar la autenticación, navegar a la siguiente pantalla
     if (isAuthenticated.value) {
-      Get.offNamed(Routes.home);
+      checkConnectivity();
     }
   }
 
-    void showCheckingConnectionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible:
-          false, // No se puede cerrar el diálogo tocando fuera de él
-      builder: (BuildContext context) {
-        return const AlertDialog(
-          backgroundColor: Colors.black54,
-          content: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 20),
-              Text(
-                'Verificando conexión...',
-                style: TextStyle(color: Colors.white),
-              ),
-            ],
-          ),
-        );
-      },
+  Future<void> showCheckingConnectionDialog() async {
+    Get.dialog(
+      barrierDismissible: false,
+      const AlertDialog(
+        backgroundColor: Colors.black54,
+        content: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 20),
+            Text(
+              'Verificando conexión...',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  void showNoConnectionDialog(BuildContext context) {
+  Future<void> showNoConnectionDialog() async {
     Get.dialog(
       barrierDismissible: false,
-      CustomDialogLostConection(),
+      const CustomDialogLostConection(),
     );
   }
 }

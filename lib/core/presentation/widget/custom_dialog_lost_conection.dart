@@ -45,7 +45,6 @@ class CustomDialogLostConection extends GetWidget<AuthController> {
               ),
               onPressed: () {
                 Get.back();
-                controller.showCheckingConnectionDialog(context);
                 controller.checkConnectivity();
               },
               child: const Text(
