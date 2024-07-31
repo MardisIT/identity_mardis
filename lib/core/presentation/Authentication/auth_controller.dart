@@ -20,7 +20,6 @@ class AuthController extends GetxController {
   Future<void> checkConnectivity() async {
     isCheckingConnection.value = true;
     showCheckingConnectionDialog();
-
     await Future.delayed(
       const Duration(seconds: 3),
     );
