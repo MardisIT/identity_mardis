@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,9 +73,23 @@ class ScannerController extends GetxController {
       }
       //* ----------------------------------------------------------------
       var infophone = await initPlatformState();
+
+      // Verifica el tipo de plataforma y ajusta el string de información del dispositivo
+      String deviceInfo;
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        deviceInfo = '${infophone['device']} - ${infophone['model']}';
+      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+        deviceInfo = infophone['model'];
+      } else {
+        deviceInfo = '';
+      }
+
       // Añadir la identidad desencriptada
       var responseDecodeScanLogin = await loginUser(
-          idUser, infophone['device'] + '-' + infophone['model'], tenant);
+        idUser,
+        deviceInfo,
+        tenant,
+      );
 
       if (responseDecodeScanLogin.status == 'success') {
         await identitiesController.addIdentity(
@@ -87,7 +99,7 @@ class ScannerController extends GetxController {
           systemAplication,
           email,
           tenant,
-          infophone['device'] + '-' + infophone['model'],
+          deviceInfo,
         );
         Get.snackbar(
           'OK!',
@@ -166,8 +178,7 @@ class ScannerController extends GetxController {
       deviceData = switch (defaultTargetPlatform) {
         TargetPlatform.android =>
           readAndroidBuildData(await deviceInfoPlugin.androidInfo),
-        TargetPlatform.iOS =>
-          readIosDeviceInfo(await deviceInfoPlugin.iosInfo),
+        TargetPlatform.iOS => readIosDeviceInfo(await deviceInfoPlugin.iosInfo),
         TargetPlatform.linux =>
           readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo),
         TargetPlatform.windows =>
