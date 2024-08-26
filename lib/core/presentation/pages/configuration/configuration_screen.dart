@@ -44,13 +44,18 @@ class ConfigurationScreen extends GetWidget<ConfigurationController> {
                       _SectionItem(
                         icon: Icons.phone_android_rounded,
                         title: 'Dispositivo',
-                        subtitle:
-                            infophone['device'] + ' - ' + infophone['model'],
+                        subtitle:  TargetPlatform.android == true 
+                        ?
+                        infophone['device'] + ' - ' + infophone['model']
+                        :
+                        infophone['name']
                       ),
                       _SectionItem(
                         icon: Icons.phonelink_setup_rounded,
                         title: 'Versión del sistema operativo',
-                        subtitle: infophone['version.release'],
+                        subtitle: TargetPlatform.android == true
+                        ? infophone['version.release']
+                        : infophone['systemVersion']
                       ),
                     ],
                   ),
