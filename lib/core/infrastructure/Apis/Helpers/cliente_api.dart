@@ -11,7 +11,7 @@ class HTTP {
   static const String Login = "/Supervisor/LoginSupervisor";
   static const String QrLogin = "/login/ScanLoginQR";
   static const String QrRegenerate = "/login/UpdateSecurityCode?IdUser=";
-  static const String UnlockUser = "/login/unLockUserSecurityCode?IdUser=";
+  static const String UnlockUser = "/login/unLockUserSecurityCode?";
 
   static String getSufix(Service service) {
     switch (service) {

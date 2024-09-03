@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/application/Interfaces/ilogin_qr_provider.dart';
@@ -7,6 +8,7 @@ import 'package:identity_engine/core/domain/Models/login/user_view_model.dart';
 import 'package:identity_engine/core/infrastructure/base/userIdentityService.dart';
 import 'package:identity_engine/core/infrastructure/base/userIndentity_ET.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
+import 'package:identity_engine/core/presentation/pages/scanner_qr/scanner_controller.dart';
 import 'package:identity_engine/core/presentation/widget/widgets.dart';
 
 class IdentitiesController extends GetxController {
@@ -108,9 +110,20 @@ class IdentitiesController extends GetxController {
   //* Metodos para eliminacion de identidades
 
   Future<void> removeSelectedIdentities() async {
+    final ScannerController scannerController = Get.find();
+    var infophone = await scannerController.initPlatformState();
+    String device;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      device = '${infophone['device']}';
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      device = infophone['model'];
+    } else {
+      device = '';
+    }
+
     for (var identity in deleteIdentitesIndex) {
       var model = await _service.getatById(identity);
-      var result = await deleteUser(model!.id, model.tenant);
+      var result = await deleteUser(model!.id, device, model.tenant);
       if (result) {
         await _service.deleteat(identity);
       } else {
@@ -154,9 +167,10 @@ class IdentitiesController extends GetxController {
     identitiesToDelete.clear();
   }
 
-  Future<bool> deleteUser(String idUser, String tenant) async {
+  Future<bool> deleteUser(String idUser, String device, String tenant) async {
     QRCodeResponse loginResponse = await loginProverInterface.deleteUserFromQR(
       idUser: idUser,
+      device: device,
       tenant: tenant,
     );
     if (loginResponse.status == "success") {

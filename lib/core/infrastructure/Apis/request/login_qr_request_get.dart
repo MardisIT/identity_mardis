@@ -30,11 +30,12 @@ class LoginRequestGet {
     }
   }
 
-    Future<QRCodeResponse> unlockUser(String idUser, String tenant) async {
+    Future<QRCodeResponse> unlockUser(String idUser, String device, String tenant) async {
     var url = HTTP.getAddress(Service.UnlockUser);
 
     try {
-      Uri combinedUrl = Uri.parse(url + idUser);
+      // Uri combinedUrl = Uri.parse(url + idUser);
+      Uri combinedUrl = Uri.parse('$url&IdUser=$idUser&device=$device');
       GetRequest service = await _callApi.getTennat(combinedUrl, tenant);
       if (service.complete && service.response.isNotEmpty) {
         var jsonResponse = json.decode(service.response);

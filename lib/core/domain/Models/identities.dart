@@ -13,6 +13,7 @@ class Identity {
   String email;
   String tenant;
   String jsonPreference;
+  String? device;
 
   Identity({
     required this.id,
@@ -22,6 +23,7 @@ class Identity {
     required this.jsonPreference,
     required this.tenant,
     this.codestaitc,
+    this.device,
     bool isChecked = false,
     double progressValue = 0.0,
     String code = '',
@@ -40,6 +42,7 @@ class Identity {
         jsonPreference: json["jsonPreference"] ?? '',
         codestaitc: json["codestaitc"],
         tenant: json["tenant"],
+        device: json["device"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -49,5 +52,6 @@ class Identity {
         "codestaitc": codestaitc,
         "systemAplication": systemAplication,
         "email": email,
+        "device": device,
       };
 }

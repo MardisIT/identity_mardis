@@ -15,7 +15,17 @@ class Userindentity {
   @HiveField(5)
   final String tenant;
   @HiveField(6)
-  final String addressMac ;
-  Userindentity(this.id, this.time, this.code, this.systemAplication,
-      this.email, this.tenant,this.addressMac);
+  final String addressMac;
+  // @HiveField(7)
+  // final String device;
+  Userindentity(
+    this.id,
+    this.time,
+    this.code,
+    this.systemAplication,
+    this.email,
+    this.tenant,
+    this.addressMac,
+    // this.device,
+  );
 }

@@ -1,7 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:identity_engine/core/infrastructure/base/userIndentity_ET.dart';
 
-
 class UserIdentityAdapter extends TypeAdapter<Userindentity> {
   @override
   final int typeId = 1;
@@ -14,8 +13,18 @@ class UserIdentityAdapter extends TypeAdapter<Userindentity> {
     final systemAplication = reader.readString();
     final email = reader.readString();
     final tenant = reader.readString();
-     final addressMac = reader.readString();
-    return Userindentity(id, time, code, systemAplication, email, tenant,addressMac);
+    final addressMac = reader.readString();
+    // final device = reader.readString();
+    return Userindentity(
+      id,
+      time,
+      code,
+      systemAplication,
+      email,
+      tenant,
+      addressMac,
+      // device,
+    );
   }
 
   @override
@@ -26,6 +35,7 @@ class UserIdentityAdapter extends TypeAdapter<Userindentity> {
     writer.writeString(obj.systemAplication);
     writer.writeString(obj.email);
     writer.writeString(obj.tenant);
-    writer.writeString( obj.addressMac);
+    writer.writeString(obj.addressMac);
+    // writer.writeString(obj.device);
   }
 }
