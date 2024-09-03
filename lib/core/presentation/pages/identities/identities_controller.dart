@@ -110,11 +110,11 @@ class IdentitiesController extends GetxController {
   //* Metodos para eliminacion de identidades
 
   Future<void> removeSelectedIdentities() async {
+    String device;
     final ScannerController scannerController = Get.find();
     var infophone = await scannerController.initPlatformState();
-    String device;
     if (defaultTargetPlatform == TargetPlatform.android) {
-      device = '${infophone['device']}';
+      device = '${infophone['device']} - ${infophone['model']}';
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       device = infophone['model'];
     } else {
