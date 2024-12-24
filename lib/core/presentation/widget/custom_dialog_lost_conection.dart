@@ -4,7 +4,13 @@ import 'package:identity_engine/core/Styles/app_colors.dart';
 import 'package:identity_engine/core/presentation/Authentication/auth_controller.dart';
 
 class CustomDialogLostConection extends GetWidget<AuthController> {
-  const CustomDialogLostConection({super.key});
+  final VoidCallback onRetry;
+
+  const CustomDialogLostConection({
+    super.key,
+    required this.onRetry,
+  });
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -43,9 +49,9 @@ class CustomDialogLostConection extends GetWidget<AuthController> {
                   AppColors.black,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 Get.back();
-                controller.checkConnectivity();
+                onRetry();
               },
               child: const Text(
                 'Reintentar',
