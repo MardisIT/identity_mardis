@@ -11,8 +11,9 @@ import 'package:identity_engine/core/domain/Models/login/login_response.dart';
 import 'package:identity_engine/core/infrastructure/base/userIdentityService.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+// import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 class ScannerController extends GetxController {
@@ -25,7 +26,8 @@ class ScannerController extends GetxController {
   final HomeController homeController = Get.find();
   final IdentitiesController identitiesController = Get.find();
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? qrViewController;
+  // QRViewController? qrViewController;
+  MobileScannerController? mobileScannerController;
   var qrResult = ''.obs;
   var tenant = '';
 
@@ -36,11 +38,6 @@ class ScannerController extends GetxController {
     try {
       final key = utf8.encode('E1BAD35C-DBA6-4B36-AC82-58E91582');
       final iv = utf8.encode('ABF01234567CDE89');
-
-      // final encryptedData = base64Decode(
-      //     'EFnPNpmZnC44gEzDNi+O9NfJXuddI4fkg0Kydm+08N6g2D5GzymqgTtKn31T9CWRHodhF+SSuLdHrxKYu9ZCuDRHtlD1/OgCyd8DYPG5MtI=');
-      // final encryptedData = base64Decode(
-      //     'D+KbjJgx/6KW7k87z3RYrtPHwuUpegb95+yJo6hh+0zHWa3bZ9//TeP0xrAslb3Qq4B5omdzRHkm29CRaPIoDA==');
       final encryptedData = base64Decode(result);
 
       final decryptedData = decrypt(Uint8List.fromList(encryptedData),
@@ -83,8 +80,6 @@ class ScannerController extends GetxController {
       } else {
         deviceInfo = '';
       }
-
-
 
       // Añadir la identidad desencriptada
       var responseDecodeScanLogin = await loginUser(
@@ -146,17 +141,26 @@ class ScannerController extends GetxController {
     }
   }
 
-  void onQRViewCreated(QRViewController controller) {
-    controller.scannedDataStream.listen((scanData) {
-      updateQrResult(scanData.code!);
-      homeController.animateToTab(0); // Navegar a la pestaña de identidades
-      controller.dispose(); // Detener la cámara
-    });
+  // void onQRViewCreated(QRViewController controller) {
+  //   controller.scannedDataStream.listen((scanData) {
+  //     updateQrResult(scanData.code!);
+  //     homeController.animateToTab(0); // Navegar a la pestaña de identidades
+  //     controller.dispose(); // Detener la cámara
+  //   });
+  // }
+
+    void onDetect(BarcodeCapture capture) {
+    if (capture.barcodes.isNotEmpty) {
+      updateQrResult(capture.barcodes.first.rawValue ?? '');
+      homeController.animateToTab(0);
+      mobileScannerController?.stop();
+    }
   }
 
   @override
   void onClose() {
-    qrViewController?.dispose();
+    // qrViewController?.dispose();
+    mobileScannerController?.dispose();
     super.onClose();
   }
 
