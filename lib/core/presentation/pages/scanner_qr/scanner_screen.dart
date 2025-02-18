@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:identity_engine/core/Styles/app_colors.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-// import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:get/get.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'scanner_controller.dart';
 
 class ScannerScreen extends GetWidget<ScannerController> {
@@ -27,26 +26,16 @@ class ScannerScreen extends GetWidget<ScannerController> {
           ),
           Expanded(
             flex: 23,
-            // child: QRView(
-            //   key: controller.qrKey,
-            //   onQRViewCreated: controller.onQRViewCreated,
-            //   overlay: QrScannerOverlayShape(
-            //     borderColor: AppColors.red,
-            //     borderRadius: 10,
-            //     borderLength: 30,
-            //     borderWidth: 10,
-            //     cutOutSize: 300,
-            //   ),
-            // ),
-            child: MobileScanner(
-              controller: controller.mobileScannerController,
-              onDetect: (barcodeCapture) {
-                final barcode = barcodeCapture.barcodes.first;
-                if (barcode.rawValue != null) {
-                  controller.updateQrResult(barcode.rawValue!);
-                  controller.mobileScannerController?.stop();
-                }
-              },
+            child: QRView(
+              key: controller.qrKey,
+              onQRViewCreated: controller.onQRViewCreated,
+              overlay: QrScannerOverlayShape(
+                borderColor: AppColors.red,
+                borderRadius: 10,
+                borderLength: 30,
+                borderWidth: 10,
+                cutOutSize: 300,
+              ),
             ),
           ),
         ],

@@ -1,0 +1,2 @@
+/Users/mardis/Documents/source/identity_mardis/android/app/.cxx/Debug/673p5m2a/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/mardis/Documents/source/identity_mardis/android/app/.cxx/Debug/673p5m2a/armeabi-v7a/CMakeFiles/rebuild_cache.dir

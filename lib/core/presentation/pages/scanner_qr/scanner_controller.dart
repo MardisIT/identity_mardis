@@ -11,10 +11,9 @@ import 'package:identity_engine/core/domain/Models/login/login_response.dart';
 import 'package:identity_engine/core/infrastructure/base/userIdentityService.dart';
 import 'package:identity_engine/core/presentation/home/home_controller.dart';
 import 'package:identity_engine/core/presentation/pages/identities/identities_controller.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
-// import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 class ScannerController extends GetxController {
   ILoginProvider loginProverInterface;
@@ -26,8 +25,7 @@ class ScannerController extends GetxController {
   final HomeController homeController = Get.find();
   final IdentitiesController identitiesController = Get.find();
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  // QRViewController? qrViewController;
-  MobileScannerController? mobileScannerController;
+  QRViewController? qrViewController;
   var qrResult = ''.obs;
   var tenant = '';
 
@@ -141,26 +139,17 @@ class ScannerController extends GetxController {
     }
   }
 
-  // void onQRViewCreated(QRViewController controller) {
-  //   controller.scannedDataStream.listen((scanData) {
-  //     updateQrResult(scanData.code!);
-  //     homeController.animateToTab(0); // Navegar a la pestaña de identidades
-  //     controller.dispose(); // Detener la cámara
-  //   });
-  // }
-
-    void onDetect(BarcodeCapture capture) {
-    if (capture.barcodes.isNotEmpty) {
-      updateQrResult(capture.barcodes.first.rawValue ?? '');
-      homeController.animateToTab(0);
-      mobileScannerController?.stop();
-    }
+  void onQRViewCreated(QRViewController controller) {
+    controller.scannedDataStream.listen((scanData) {
+      updateQrResult(scanData.code!);
+      homeController.animateToTab(0); // Navegar a la pestaña de identidades
+      controller.pauseCamera(); // Detener la cámara
+    });
   }
 
   @override
   void onClose() {
-    // qrViewController?.dispose();
-    mobileScannerController?.dispose();
+    qrViewController?.pauseCamera();
     super.onClose();
   }
 
