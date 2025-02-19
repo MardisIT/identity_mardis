@@ -1,18 +1,20 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:identity_engine/core/Routes/router.dart';
 import 'package:identity_engine/core/presentation/widget/widgets.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 class AuthController extends GetxController {
   final LocalAuthentication auth = LocalAuthentication();
   RxBool isAuthenticated = false.obs;
   RxBool isConnected = false.obs;
   RxBool isCheckingConnection = true.obs;
+
+  StreamSubscription<InternetConnectionStatus>? connectionSubscription;
+
+  // late StreamSubscription _connectionSubscription;
 
   @override
   void onInit() {
@@ -21,30 +23,52 @@ class AuthController extends GetxController {
   }
 
   @override
-  void dispose() {
-    subscription.cancel();
-    super.dispose();
+  void onClose() {
+    connectionSubscription!.cancel(); // Cancelar el listener
+    super.onClose();
   }
 
   Future<void> checkConnectivity() async {
     isCheckingConnection.value = true;
     showCheckingConnectionDialog();
-    await Future.delayed(
-      const Duration(seconds: 3),
-    );
-    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    bool hasConnection =
+        await InternetConnectionChecker.createInstance().hasConnection;
     isCheckingConnection.value = false;
-    Get.back();
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
+    Get.back(); // Cierra el diálogo de carga
+
+    if (hasConnection) {
       isConnected.value = true;
-      Get.offNamed(Routes.home);
     } else {
       isConnected.value = false;
       showNoConnectionDialog();
     }
+
+    // Inicia el listener para cambios de conexión
+    startListeningConnectionChanges();
   }
 
+  void startListeningConnectionChanges() {
+    // Cancela cualquier listener anterior (si lo hay) para evitar duplicados
+    // connectionSubscription?.cancel();
+
+    connectionSubscription = InternetConnectionChecker.createInstance()
+        .onStatusChange
+        .listen((status) {
+      if (status == InternetConnectionStatus.connected) {
+        if (isConnected.value) {
+          Get.offNamed(
+              Routes.home); // Solo redirecciona si se desconectó previamente
+        }
+      } else if (status == InternetConnectionStatus.disconnected) {
+        if (isConnected.value) {
+          isConnected.value = false;
+          showNoConnectionDialog(); // Muestra el diálogo si pierde conexión
+        }
+      }
+    });
+    // connectionSubscription?.cancel();
+  }
   Future<void> authenticate() async {
     try {
       bool canCheckBiometrics = await auth.canCheckBiometrics;
@@ -68,10 +92,9 @@ class AuthController extends GetxController {
       isAuthenticated.value = true;
     }
 
-    // Después de completar la autenticación, navegar a la siguiente pantalla
     if (isAuthenticated.value) {
-      // checkConnectivity();
-      getConnectivity();
+      checkConnectivity();
+      // startConnectionListener(); // Iniciar el listener de conexión
     }
   }
 
@@ -98,43 +121,14 @@ class AuthController extends GetxController {
   }
 
   Future<void> showNoConnectionDialog() async {
-    // if (Get.isDialogOpen == false) {
-      Get.dialog(
-        barrierDismissible: false,
-        CustomDialogLostConection(
-          onRetry: () async {
-            Get.back(); // Cierra el diálogo
-            await checkInternetAndNavigate();
-          },
-        ),
-      );
-    // }
-  }
-
-  //! NEW CONNECTION METHOD
-
-  late StreamSubscription subscription;
-  var isDeviceConnected = false.obs;
-  RxBool isAlertSet = false.obs;
-
-  Future<void> checkInternetAndNavigate() async {
-    showCheckingConnectionDialog();
-    isDeviceConnected.value =
-        await InternetConnectionChecker.createInstance().hasConnection;
-    if (isDeviceConnected.value) {
-      Get.back(); // Cierra el diálogo de verificación
-      Get.offNamed(Routes.home);
-    } else {
-      Get.back(); // Cierra el diálogo de verificación
-      showNoConnectionDialog();
-    }
-  }
-
-  void getConnectivity() {
-    subscription = Connectivity().onConnectivityChanged.listen(
-      (List<ConnectivityResult> result) async {
-        await checkInternetAndNavigate();
-      },
+    Get.dialog(
+      barrierDismissible: false,
+      CustomDialogLostConection(
+        onRetry: () async {
+          Get.back(); // Cierra el diálogo
+          await checkConnectivity(); // Reintenta la verificación
+        },
+      ),
     );
   }
 }
