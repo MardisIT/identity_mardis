@@ -29,13 +29,10 @@ class HTTP {
   }
 
   static String getAddress(Service service) {
-    //String baseURL = "https://enginecore-backend.azurewebsites.net/api";
-    //String baseURL = "http://mardisservice.azurewebsites.net/api";
-    //String baseURL= "https://surticompras.azurewebsites.net";
     // String baseURL = "https://enginecoretest-backend.azurewebsites.net/api";
-    String baseURL = "https://enginecore-backend.azurewebsites.net/api";
-    //String baseURL = "https://localhost:7169/api";
-    //String baseURL = "https://enginecore-backend.azurewebsites.net/api";
+    // String baseURL = "https://enginecore-backend.azurewebsites.net/api";
+    // String baseURL = "https://enginecore-backend-test.azurewebsites.net/api";
+    String baseURL = "https://enginecorev2-backend.azurewebsites.net/";
     return "$baseURL${getSufix(service)}";
   }
 }
