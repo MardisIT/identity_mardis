@@ -28,7 +28,7 @@ Map<String, dynamic> readAndroidBuildData(AndroidDeviceInfo build) {
       'type': build.type,
       'isPhysicalDevice': build.isPhysicalDevice,
       'systemFeatures': build.systemFeatures,
-      'serialNumber': build.serialNumber,
+      // 'serialNumber': build.serialNumber,
       'isLowRamDevice': build.isLowRamDevice,
     };
   }

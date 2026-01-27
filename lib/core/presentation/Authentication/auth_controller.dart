@@ -14,8 +14,6 @@ class AuthController extends GetxController {
 
   StreamSubscription<InternetConnectionStatus>? connectionSubscription;
 
-  // late StreamSubscription _connectionSubscription;
-
   @override
   void onInit() {
     super.onInit();
@@ -76,11 +74,11 @@ class AuthController extends GetxController {
 
       if (canCheckBiometrics && isDeviceSupported) {
         isAuthenticated.value = await auth.authenticate(
-          localizedReason: 'Please authenticate to access this feature',
-          options: const AuthenticationOptions(
-            useErrorDialogs: true,
-            stickyAuth: true,
-          ),
+          localizedReason: 'Por favor autentíquese para continuar',
+          // options: const AuthenticationOptions(
+          //   useErrorDialogs: true,
+          //   stickyAuth: true,
+          // ),
         );
       } else {
         // Si el dispositivo no soporta autenticación biométrica, continuar sin autenticación

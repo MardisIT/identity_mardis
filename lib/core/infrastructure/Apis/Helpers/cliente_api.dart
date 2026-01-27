@@ -23,8 +23,6 @@ class HTTP {
         return QrRegenerate;
       case Service.UnlockUser:
         return UnlockUser;
-      default:
-        return "";
     }
   }
 
@@ -32,7 +30,7 @@ class HTTP {
     // String baseURL = "https://enginecoretest-backend.azurewebsites.net/api";
     // String baseURL = "https://enginecore-backend.azurewebsites.net/api";
     // String baseURL = "https://enginecore-backend-test.azurewebsites.net/api";
-    String baseURL = "https://enginecorev2-backend.azurewebsites.net/";
+    String baseURL = "https://enginecorev2-backend.azurewebsites.net/api";
     return "$baseURL${getSufix(service)}";
   }
 }

@@ -8,7 +8,7 @@ final appTheme = ThemeData(
     backgroundColor: AppColors.black,
     centerTitle: true,
   ),
-  textTheme: GoogleFonts.robotoTextTheme(),
+  textTheme: GoogleFonts.nunitoTextTheme(),
   useMaterial3: true,
   
   // platform: TargetPlatform.android,
