@@ -26,37 +26,68 @@ class AuthController extends GetxController {
     super.onClose();
   }
 
-  Future<void> checkConnectivity() async {
-    isCheckingConnection.value = true;
+  // Future<void> checkConnectivity() async {
+  //   isCheckingConnection.value = true;
+  //   showCheckingConnectionDialog();
+
+  //   bool hasConnection =
+  //       await InternetConnectionChecker.createInstance().hasConnection;
+  //   isCheckingConnection.value = false;
+  //   Get.back(); // Cierra el diálogo de carga
+
+  //   if (hasConnection) {
+  //     isConnected.value = true;
+  //   } else {
+  //     isConnected.value = false;
+  //     showNoConnectionDialog();
+  //   }
+
+  //   // Inicia el listener para cambios de conexión
+  //   startListeningConnectionChanges();
+  // }
+
+  // void startListeningConnectionChanges() {
+  //   // Cancela cualquier listener anterior (si lo hay) para evitar duplicados
+  //   // connectionSubscription?.cancel();
+
+  //   connectionSubscription = InternetConnectionChecker.createInstance()
+  //       .onStatusChange
+  //       .listen((status) {
+  //     if (status == InternetConnectionStatus.connected) {
+  //       if (!isConnected.value) {
+  //         isConnected.value = true;
+  //         // Get.offNamed(Routes.home); // Solo redirecciona si se desconectó previamente
+  //       }
+  //     } else if (status == InternetConnectionStatus.disconnected) {
+  //       if (isConnected.value) {
+  //         isConnected.value = false;
+  //         showNoConnectionDialog(); // Muestra el diálogo si pierde conexión
+  //       }
+  //     }
+  //   });
+  //   // connectionSubscription?.cancel();
+  // }
+
+  void startListeningConnectionChanges() async {
     showCheckingConnectionDialog();
+    InternetConnectionStatus initStatus = await InternetConnectionChecker.createInstance().connectionStatus;
 
-    bool hasConnection =
-        await InternetConnectionChecker.createInstance().hasConnection;
-    isCheckingConnection.value = false;
-    Get.back(); // Cierra el diálogo de carga
-
-    if (hasConnection) {
+    if (initStatus == InternetConnectionStatus.connected) {
       isConnected.value = true;
+      Get.back(); // Cierra el diálogo de carga
+      Get.offNamed(Routes.home);
     } else {
       isConnected.value = false;
-      showNoConnectionDialog();
+      Get.back(); // Cierra el diálogo de carga
+      showNoConnectionDialog();   
     }
-
-    // Inicia el listener para cambios de conexión
-    startListeningConnectionChanges();
-  }
-
-  void startListeningConnectionChanges() {
-    // Cancela cualquier listener anterior (si lo hay) para evitar duplicados
-    // connectionSubscription?.cancel();
-
     connectionSubscription = InternetConnectionChecker.createInstance()
         .onStatusChange
         .listen((status) {
       if (status == InternetConnectionStatus.connected) {
-        if (isConnected.value) {
-          Get.offNamed(
-              Routes.home); // Solo redirecciona si se desconectó previamente
+        if (!isConnected.value) {
+          isConnected.value = true;
+          // Get.offNamed(Routes.home); // Solo redirecciona si se desconectó previamente
         }
       } else if (status == InternetConnectionStatus.disconnected) {
         if (isConnected.value) {
@@ -65,8 +96,8 @@ class AuthController extends GetxController {
         }
       }
     });
-    // connectionSubscription?.cancel();
   }
+
   Future<void> authenticate() async {
     try {
       bool canCheckBiometrics = await auth.canCheckBiometrics;
@@ -85,14 +116,14 @@ class AuthController extends GetxController {
         isAuthenticated.value = true;
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       // Si ocurre un error, permitir el acceso
-      isAuthenticated.value = true;
+      // isAuthenticated.value = true;
     }
 
     if (isAuthenticated.value) {
-      checkConnectivity();
-      // startConnectionListener(); // Iniciar el listener de conexión
+      // checkConnectivity();
+      startListeningConnectionChanges(); // Iniciar el listener de conexión
     }
   }
 
@@ -124,7 +155,7 @@ class AuthController extends GetxController {
       CustomDialogLostConection(
         onRetry: () async {
           Get.back(); // Cierra el diálogo
-          await checkConnectivity(); // Reintenta la verificación
+          startListeningConnectionChanges(); // Reintenta la verificación
         },
       ),
     );
