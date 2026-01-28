@@ -59,5 +59,6 @@ class HomeController extends GetxController with WidgetsBindingObserver {
       Get.offAllNamed(Routes.auth);
     }
     super.didChangeAppLifecycleState(state);
+    debugPrint('AppLifecycleState changed to: $state');
   }
 }

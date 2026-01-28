@@ -8,9 +8,13 @@ import 'package:local_auth/local_auth.dart';
 
 class AuthController extends GetxController {
   final LocalAuthentication auth = LocalAuthentication();
+  final InternetConnectionChecker _connectionChecker =
+      InternetConnectionChecker.createInstance();
+
   RxBool isAuthenticated = false.obs;
   RxBool isConnected = false.obs;
-  RxBool isCheckingConnection = true.obs;
+  RxBool isCheckingConnection = false.obs;
+  bool _ignoreFirstConnectionEvent = true;
 
   StreamSubscription<InternetConnectionStatus>? connectionSubscription;
 
@@ -22,113 +26,85 @@ class AuthController extends GetxController {
 
   @override
   void onClose() {
-    connectionSubscription!.cancel(); // Cancelar el listener
+    connectionSubscription?.cancel();
     super.onClose();
   }
 
-  // Future<void> checkConnectivity() async {
-  //   isCheckingConnection.value = true;
-  //   showCheckingConnectionDialog();
+  // ================= BIOMETRÍA =================
+  Future<void> authenticate() async {
+    try {
+      final canCheckBiometrics = await auth.canCheckBiometrics;
+      final isDeviceSupported = await auth.isDeviceSupported();
 
-  //   bool hasConnection =
-  //       await InternetConnectionChecker.createInstance().hasConnection;
-  //   isCheckingConnection.value = false;
-  //   Get.back(); // Cierra el diálogo de carga
+      if (canCheckBiometrics && isDeviceSupported) {
+        isAuthenticated.value = await auth.authenticate(
+          localizedReason: 'Por favor autentíquese para continuar',
+          biometricOnly: false,
+          persistAcrossBackgrounding: true, // ← CLAVE para iOS
+          sensitiveTransaction: true,
+        );
+      } else {
+        isAuthenticated.value = true;
+      }
+    } catch (e) {
+      debugPrint('Auth error: $e');
+      isAuthenticated.value = true; // fallback
+    }
 
-  //   if (hasConnection) {
-  //     isConnected.value = true;
-  //   } else {
-  //     isConnected.value = false;
-  //     showNoConnectionDialog();
-  //   }
+    if (isAuthenticated.value) {
+      await _checkInitialConnection();
+      _startListeningConnectionChanges();
+    }
+  }
 
-  //   // Inicia el listener para cambios de conexión
-  //   startListeningConnectionChanges();
-  // }
+  // ================= CONEXIÓN INICIAL =================
+  Future<void> _checkInitialConnection() async {
+    isCheckingConnection.value = true;
+    await showCheckingConnectionDialog();
 
-  // void startListeningConnectionChanges() {
-  //   // Cancela cualquier listener anterior (si lo hay) para evitar duplicados
-  //   // connectionSubscription?.cancel();
+    final status = await _connectionChecker.connectionStatus;
 
-  //   connectionSubscription = InternetConnectionChecker.createInstance()
-  //       .onStatusChange
-  //       .listen((status) {
-  //     if (status == InternetConnectionStatus.connected) {
-  //       if (!isConnected.value) {
-  //         isConnected.value = true;
-  //         // Get.offNamed(Routes.home); // Solo redirecciona si se desconectó previamente
-  //       }
-  //     } else if (status == InternetConnectionStatus.disconnected) {
-  //       if (isConnected.value) {
-  //         isConnected.value = false;
-  //         showNoConnectionDialog(); // Muestra el diálogo si pierde conexión
-  //       }
-  //     }
-  //   });
-  //   // connectionSubscription?.cancel();
-  // }
+    isCheckingConnection.value = false;
+    _closeDialogSafely();
 
-  void startListeningConnectionChanges() async {
-    showCheckingConnectionDialog();
-    InternetConnectionStatus initStatus = await InternetConnectionChecker.createInstance().connectionStatus;
-
-    if (initStatus == InternetConnectionStatus.connected) {
+    if (status == InternetConnectionStatus.connected) {
       isConnected.value = true;
-      Get.back(); // Cierra el diálogo de carga
       Get.offNamed(Routes.home);
     } else {
       isConnected.value = false;
-      Get.back(); // Cierra el diálogo de carga
-      showNoConnectionDialog();   
+      showNoConnectionDialog();
     }
-    connectionSubscription = InternetConnectionChecker.createInstance()
-        .onStatusChange
-        .listen((status) {
-      if (status == InternetConnectionStatus.connected) {
-        if (!isConnected.value) {
-          isConnected.value = true;
-          // Get.offNamed(Routes.home); // Solo redirecciona si se desconectó previamente
-        }
-      } else if (status == InternetConnectionStatus.disconnected) {
-        if (isConnected.value) {
+  }
+
+  // ================= LISTENER =================
+  void _startListeningConnectionChanges() {
+    connectionSubscription?.cancel();
+
+    connectionSubscription =
+        _connectionChecker.onStatusChange.listen((status) async {
+      if (_ignoreFirstConnectionEvent) {
+        _ignoreFirstConnectionEvent = false;
+        return;
+      }
+
+      if (status == InternetConnectionStatus.disconnected) {
+        final stillDisconnected = await _hasStableConnection();
+        if (stillDisconnected && isConnected.value) {
           isConnected.value = false;
-          showNoConnectionDialog(); // Muestra el diálogo si pierde conexión
+          showNoConnectionDialog();
         }
       }
     });
   }
 
-  Future<void> authenticate() async {
-    try {
-      bool canCheckBiometrics = await auth.canCheckBiometrics;
-      bool isDeviceSupported = await auth.isDeviceSupported();
-
-      if (canCheckBiometrics && isDeviceSupported) {
-        isAuthenticated.value = await auth.authenticate(
-          localizedReason: 'Por favor autentíquese para continuar',
-          // options: const AuthenticationOptions(
-          //   useErrorDialogs: true,
-          //   stickyAuth: true,
-          // ),
-        );
-      } else {
-        // Si el dispositivo no soporta autenticación biométrica, continuar sin autenticación
-        isAuthenticated.value = true;
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-      // Si ocurre un error, permitir el acceso
-      // isAuthenticated.value = true;
-    }
-
-    if (isAuthenticated.value) {
-      // checkConnectivity();
-      startListeningConnectionChanges(); // Iniciar el listener de conexión
-    }
+  Future<bool> _hasStableConnection() async {
+    await Future.delayed(const Duration(milliseconds: 600));
+    return await _connectionChecker.hasConnection;
   }
 
+  // ================= DIÁLOGOS =================
   Future<void> showCheckingConnectionDialog() async {
-    if (Get.isDialogOpen == false) {
+    if (!(Get.isDialogOpen ?? false)) {
       Get.dialog(
         barrierDismissible: false,
         const AlertDialog(
@@ -149,13 +125,21 @@ class AuthController extends GetxController {
     }
   }
 
+  void _closeDialogSafely() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
+
   Future<void> showNoConnectionDialog() async {
+    if (Get.isDialogOpen ?? false) return;
+
     Get.dialog(
       barrierDismissible: false,
       CustomDialogLostConection(
         onRetry: () async {
-          Get.back(); // Cierra el diálogo
-          startListeningConnectionChanges(); // Reintenta la verificación
+          _closeDialogSafely();
+          await _checkInitialConnection();
         },
       ),
     );
